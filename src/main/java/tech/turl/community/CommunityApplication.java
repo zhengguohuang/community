@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class CommunityApplication {
 
 	public static void main(String[] args) {
+		// 启动Tomcat，创建容器
 		SpringApplication.run(CommunityApplication.class, args);
 	}
 
