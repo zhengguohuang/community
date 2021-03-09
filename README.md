@@ -18,17 +18,28 @@ www.turl.tech/community
 
 ## 技术栈
 
-| 技术            | 链接                                        | 版本  |
-| --------------- | ------------------------------------------- | ----- |
-| Spring Boot     | https://spring.io/projects/spring-boot      | 2.4.3 |
-| Spring          | https://spring.io/projects/spring-framework | 5.4.3 |
-| Spring MVC      |                                             |       |
-| MyBatis         |                                             |       |
-| Redis           |                                             |       |
-| Kafka           |                                             |       |
-| Elasticsearch   |                                             |       |
-| Spring Security | https://spring.io/projects/spring-security  |       |
-| Spring Actuator |                                             |       |
+| 技术            | 链接                                                         |
+| --------------- | ------------------------------------------------------------ |
+| Spring Boot     | https://spring.io/projects/spring-boot                       |
+| Spring          | https://spring.io/projects/spring-framework                  |
+| Spring MVC      | https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#spring-web |
+| MyBatis         | http://www.mybatis.org/mybatis-3                             |
+| Redis           | https://redis.io/                                            |
+| Kafka           | http://kafka.apache.org/                                     |
+| Elasticsearch   | https://www.elastic.co/cn/elasticsearch/                     |
+| Spring Security | https://spring.io/projects/spring-security                   |
+| Spring Actuator | https://docs.spring.io/spring-boot/docs/2.4.3/reference/html/production-ready-features.html#production-ready |
+
+## 数据库初始化
+
+```sql
+create database community;
+use community;
+souuce /path/to/sql/init_schema.sql;
+souuce /path/to/sql/init_data.sql;
+```
+
+
 
 ## 运行
 
