@@ -1,14 +1,16 @@
 package tech.turl.community;
 
-import org.apache.ibatis.annotations.Mapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
+import tech.turl.community.dao.DiscussPostMapper;
 import tech.turl.community.dao.UserMapper;
+import tech.turl.community.entity.DiscussPost;
 import tech.turl.community.entity.User;
 
 import java.util.Date;
+import java.util.List;
 
 
 @SpringBootTest
@@ -50,9 +52,21 @@ public class TestMapper {
 
         rows = userMapper.updatePassword(150, "hello");
         System.out.println(rows);
-
-
-
+    }
+    @Test
+    public void test(){
+        System.out.println(Integer.parseInt("-001111", 10));
+    }
+    @Autowired
+    private DiscussPostMapper discussPostMapper;
+    @Test
+    public void testSelectPosts(){
+        List<DiscussPost> list = discussPostMapper.selectDiscussPosts(0, 0, 10);
+        for(DiscussPost post : list){
+            System.out.println(post);
+        }
+        int count = discussPostMapper.selectDiscussPostRows(0);
+        System.out.println(count);
     }
 
 }

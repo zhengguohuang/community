@@ -6,11 +6,11 @@ import tech.turl.community.entity.User;
 
 @Mapper
 public interface UserMapper {
-    User selectById(int id);
+    User selectById(@Param("id") int id);
 
-    User selectByName(String username);
+    User selectByName(@Param("username") String username);
 
-    User selectByEmail(String email);
+    User selectByEmail(@Param("email") String email);
 
     int insertUser(User user);
 
