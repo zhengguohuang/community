@@ -1,18 +1,18 @@
-<!doctype html>
-<html lang="en">
+<!doctype html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="icon" href="https://static.nowcoder.com/images/logo_87_87.png"/>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
-	<link rel="stylesheet" href="../css/global.css" />
-	<link rel="stylesheet" href="../css/login.css" />
+	<link rel="stylesheet" href="../css/global.css" th:href="@{/css/global.css}" />
+	<link rel="stylesheet" href="../css/login.css" th:href="@{/css/login.css}"/>
 	<title>牛客网-注册</title>
 </head>
 <body>
 	<div class="nk-container">
 		<!-- 头部 -->
-		<header class="bg-dark sticky-top">
+		<header class="bg-dark sticky-top" th:replace="index :: header">
 			<div class="container">
 				<!-- 导航 -->
 				<nav class="navbar navbar-expand-lg navbar-dark">
@@ -63,12 +63,14 @@
 		<div class="main">
 			<div class="container pl-5 pr-5 pt-3 pb-3 mt-3 mb-3">
 				<h3 class="text-center text-info border-bottom pb-3">注&nbsp;&nbsp;册</h3>
-				<form class="mt-5">
+				<form class="mt-5" method="post" action="#" th:action="@{/register}">
 					<div class="form-group row">
 						<label for="username" class="col-sm-2 col-form-label text-right">账号:</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control" id="username" placeholder="请输入您的账号!" required>
-							<div class="invalid-feedback">
+							<input type="text" th:class="|form-control ${usernameMsg != null ? 'is-invalid' : ''}|"
+								   th:value="${user != null ? user.username : ''}"
+								   id="username" name="username" placeholder="请输入您的账号!" required>
+							<div class="invalid-feedback" th:text="${usernameMsg}">
 								该账号已存在!
 							</div>
 						</div>
@@ -76,8 +78,10 @@
 					<div class="form-group row mt-4">
 						<label for="password" class="col-sm-2 col-form-label text-right">密码:</label>
 						<div class="col-sm-10">
-							<input type="password" class="form-control" id="password" placeholder="请输入您的密码!" required>
-							<div class="invalid-feedback">
+							<input type="password" th:class="|form-control ${passwordMsg != null ? 'is-invalid' : ''}|"
+								   th:value="${user != null ? user.password : ''}"
+								   id="password" name="password" placeholder="请输入您的密码!" required>
+							<div class="invalid-feedback" th:text="${passwordMsg}">
 								密码长度不能小于8位!
 							</div>							
 						</div>
@@ -85,7 +89,9 @@
 					<div class="form-group row mt-4">
 						<label for="confirm-password" class="col-sm-2 col-form-label text-right">确认密码:</label>
 						<div class="col-sm-10">
-							<input type="password" class="form-control" id="confirm-password" placeholder="请再次输入密码!" required>
+							<input type="password" class="form-control"
+								   th:value="${user != null ? user.password : ''}"
+								   id="confirm-password" placeholder="请再次输入密码!" required>
 							<div class="invalid-feedback">
 								两次输入的密码不一致!
 							</div>
@@ -94,8 +100,10 @@
 					<div class="form-group row">
 						<label for="email" class="col-sm-2 col-form-label text-right">邮箱:</label>
 						<div class="col-sm-10">
-							<input type="email" class="form-control" id="email" placeholder="请输入您的邮箱!" required>
-							<div class="invalid-feedback">
+							<input type="email" th:class="|form-control ${emailMsg != null ? 'is-invalid' : ''}|"
+								   th:value="${user != null ? user.email : ''}"
+								   id="email" name="email" placeholder="请输入您的邮箱!" required>
+							<div class="invalid-feedback" th:text="${emailMsg}">
 								该邮箱已注册!
 							</div>
 						</div>
@@ -176,7 +184,7 @@
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
-	<script src="../js/global.js"></script>
-	<script src="../js/register.js"></script>
+	<script src="../js/global.js" th:src="@{/js/global.js}"></script>
+	<script src="../js/register.js" th:src="@{/js/register.js}"></script>
 </body>
 </html>

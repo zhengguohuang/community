@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <link rel="icon" href="https://static.nowcoder.com/images/logo_87_87.png"/>
@@ -8,11 +8,11 @@
 <body>
 	<div>
 		<p>
-			<b>xxx@xxx.com</b>, 您好!
+			<b th:text="${email}">xxx@xxx.com</b>, 您好!
 		</p>
 		<p>
 			您正在注册牛客网, 这是一封激活邮件, 请点击 
-			<a href="#">http://www.nowcoder.com/activation/abcdefg123456.html</a>,
+			<a  href="#" th:href="${url}"><span th:text="${url}">http://www.nowcoder.com/activation/abcdefg123456.html</span> </a>,
 			激活您的牛客账号!
 		</p>
 	</div>
