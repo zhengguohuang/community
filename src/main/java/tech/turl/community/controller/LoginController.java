@@ -1,5 +1,8 @@
 package tech.turl.community.controller;
 
+import com.google.code.kaptcha.Producer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,12 +13,22 @@ import tech.turl.community.entity.User;
 import tech.turl.community.service.UserService;
 import tech.turl.community.util.CommunityConstant;
 
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Map;
 
 @Controller
 public class LoginController implements CommunityConstant {
     @Autowired
     private UserService userService;
+    @Autowired
+    private Producer kaptchaProducer;
+
+    private static final Logger LOGGER =  LoggerFactory.getLogger(LoginController.class);
 
 
     @GetMapping("/register")
@@ -25,6 +38,25 @@ public class LoginController implements CommunityConstant {
     @GetMapping("/login")
     public String getLoginPage(){
         return "/site/login";
+    }
+
+    @GetMapping("/kaptcha")
+    public void getKaptcha(HttpServletResponse response, HttpSession session){
+        // 生成验证码
+        String text = kaptchaProducer.createText();
+        BufferedImage image = kaptchaProducer.createImage(text);
+
+        // 将验证码存入session
+        session.setAttribute("kaptcha", text);
+
+        // 将图片输出给浏览器
+        try {
+            OutputStream os = response.getOutputStream();
+            ImageIO.write(image, "png", os);
+        } catch (IOException e) {
+            LOGGER.error("响应验证码失败："+e.getMessage());
+        }
+
     }
 
     @PostMapping("/register")
