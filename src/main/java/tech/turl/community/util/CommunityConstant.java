@@ -1,5 +1,9 @@
 package tech.turl.community.util;
 
+/**
+ * @author zhengguohuang
+ * @date 2021/3/15
+ */
 public interface CommunityConstant {
 
     /**
@@ -16,4 +20,14 @@ public interface CommunityConstant {
      * 激活失败
      */
     int ACTIVATION_FAILED = 2;
+
+    /**
+     * 默认状态的登录凭证的超时时间 12小时
+     */
+    int DEFAULT_EXPIRED_SECONDS = 3600 * 12;
+
+    /**
+     * 记住状态下的登录凭证超时时间 100天
+     */
+    int REMEMBER_EXPIRED_SECONDS = 3600 * 24 * 100;
 }

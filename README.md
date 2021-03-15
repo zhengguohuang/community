@@ -2,9 +2,14 @@
 
 ## 在线演示地址
 
-www.turl.tech/community
+http://community.turl.tech
 
 ## 功能列表
+
+- [x] 邮件发送
+- [x] 注册
+- [x] 验证码
+- [ ] 登录
 
 - [ ] 讨论区
 - [ ] 敏感词过滤

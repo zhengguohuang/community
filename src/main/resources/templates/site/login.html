@@ -63,12 +63,14 @@
 		<div class="main">
 			<div class="container pl-5 pr-5 pt-3 pb-3 mt-3 mb-3">
 				<h3 class="text-center text-info border-bottom pb-3">登&nbsp;&nbsp;录</h3>
-				<form class="mt-5">				
+                <form class="mt-5" method="post" th:action="@{/login}">
 					<div class="form-group row">
 						<label for="username" class="col-sm-2 col-form-label text-right">账号:</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control is-invalid" id="username" placeholder="请输入您的账号!" required>
-							<div class="invalid-feedback">
+                            <input type="text" th:class="|form-control is-invalid ${usernameMsg}!=null ?'is-valid':''|"
+                                   th:value="${param.username}"
+                                   id="username" name="username" placeholder="请输入您的账号!" required>
+                            <div class="invalid-feedback" th:text="${usernameMsg}">
 								该账号不存在!
 							</div>
 						</div>
@@ -76,8 +78,11 @@
 					<div class="form-group row mt-4">
 						<label for="password" class="col-sm-2 col-form-label text-right">密码:</label>
 						<div class="col-sm-10">
-							<input type="password" class="form-control is-invalid" id="password" placeholder="请输入您的密码!" required>
-							<div class="invalid-feedback">
+                            <input type="password"
+                                   th:class="|form-control is-invalid ${passwordMsg}!=null ?'is-valid':''|"
+                                   th:value="${param.password}"
+                                   id="password" name="password" placeholder="请输入您的密码!" required>
+                            <div class="invalid-feedback" th:text="${passwordMsg}">
 								密码长度不能小于8位!
 							</div>							
 						</div>
@@ -85,8 +90,9 @@
 					<div class="form-group row mt-4">
 						<label for="verifycode" class="col-sm-2 col-form-label text-right">验证码:</label>
 						<div class="col-sm-6">
-							<input type="text" class="form-control is-invalid" id="verifycode" placeholder="请输入验证码!">
-							<div class="invalid-feedback">
+                            <input type="text" th:class="|form-control is-invalid ${codeMsg}!=null ?'is-valid':''|"
+                                   id="verifycode" name="code" placeholder="请输入验证码!">
+                            <div class="invalid-feedback" th:text="${codeMsg}">
 								验证码不正确!
 							</div>
 						</div>
@@ -98,7 +104,8 @@
 					<div class="form-group row mt-4">
 						<div class="col-sm-2"></div>
 						<div class="col-sm-10">
-							<input type="checkbox" id="remember-me" checked="checked">
+                            <input type="checkbox" id="remember-me" name="rememberme" checked="checked"
+                                   th:checked="rememberme">
 							<label class="form-check-label" for="remember-me">记住我</label>
 							<a href="forget.html" class="text-danger float-right">忘记密码?</a>
 						</div>
