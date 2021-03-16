@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import tech.turl.community.entity.User;
 import tech.turl.community.service.UserService;
 import tech.turl.community.util.CommunityConstant;
@@ -69,7 +66,6 @@ public class LoginController implements CommunityConstant {
         } catch (IOException e) {
             LOGGER.error("响应验证码失败："+e.getMessage());
         }
-
     }
 
     @PostMapping("/register")
@@ -149,7 +145,7 @@ public class LoginController implements CommunityConstant {
         }
     }
 
-    @GetMapping("/logout")
+    @PatchMapping("/logout")
     public String logout(@CookieValue("ticket") String ticket) {
         userService.logout(ticket);
         return "redirect:/login";
