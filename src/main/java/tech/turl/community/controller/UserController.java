@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
+import tech.turl.community.annotation.LoginRequired;
 import tech.turl.community.entity.User;
 import tech.turl.community.service.UserService;
 import tech.turl.community.util.CommunityUtil;
@@ -53,6 +54,7 @@ public class UserController {
      *
      * @return
      */
+    @LoginRequired
     @GetMapping("/setting")
     public String getSettingPage() {
         return "/site/setting";
@@ -65,6 +67,7 @@ public class UserController {
      * @param model
      * @return
      */
+    @LoginRequired
     @PostMapping("/upload")
     public String uploadHeader(MultipartFile headerImage, Model model) {
         if (headerImage == null) {
