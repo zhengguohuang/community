@@ -2,6 +2,10 @@ package tech.turl.community.entity;
 
 import java.util.Date;
 
+/**
+ * @author zhengguohuang
+ * @date 2021/03/17
+ */
 public class DiscussPost {
     private int id;
     private int userId;
@@ -10,7 +14,16 @@ public class DiscussPost {
     private int type;
     private int status;
     private Date createTime;
+    private int commentCount;
     private double score;
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
+    }
 
     public int getId() {
         return id;

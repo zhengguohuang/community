@@ -6,11 +6,36 @@ import tech.turl.community.entity.DiscussPost;
 
 import java.util.List;
 
+/**
+ * @author zhengguohuang
+ * @date 2021/03/17
+ */
 @Mapper
 public interface DiscussPostMapper {
+    /**
+     * 分页查询帖子
+     *
+     * @param userId
+     * @param offset
+     * @param limit
+     * @return
+     */
     List<DiscussPost> selectDiscussPosts(@Param("userId") int userId, @Param("offset") int offset, @Param("limit") int limit);
 
-    // @Param注解用于给定参数取别名，
-    // 如果只有一个参数，并且在<if>里面使用，则必须加别名
+    /**
+     * <p>@Param注解用于给定参数取别名</p>
+     * 如果只有一个参数，并且在if里面使用，则必须加别名
+     *
+     * @param userId
+     * @return
+     */
     int selectDiscussPostRows (@Param("userId") int userId);
+
+    /**
+     * 插入一条帖子
+     *
+     * @param discussPost
+     * @return
+     */
+    int insertDiscussPost(DiscussPost discussPost);
 }

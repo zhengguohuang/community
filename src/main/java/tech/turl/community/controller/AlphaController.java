@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import tech.turl.community.entity.Demo;
 import tech.turl.community.service.AlphaService;
 import tech.turl.community.util.CommunityUtil;
 
@@ -178,5 +179,25 @@ public class AlphaController {
         System.out.println(session.getAttribute("id"));
         System.out.println(session.getAttribute("name"));
         return "get cookie";
+    }
+
+
+    @GetMapping("/demo")
+    @ResponseBody
+    public Demo demo() {
+        Demo demo = new Demo();
+        demo.setAge(1);
+        demo.setId(1);
+        demo.setName("jjj");
+
+        return demo;
+    }
+
+    @PostMapping("/ajax")
+    @ResponseBody
+    public String testAjax(String name, int age) {
+        System.out.println(name);
+        System.out.println(age);
+        return CommunityUtil.getJSONString(0, "操作成功！");
     }
 }

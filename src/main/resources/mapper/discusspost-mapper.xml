@@ -4,6 +4,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="tech.turl.community.dao.DiscussPostMapper">
 
+    <sql id="selectFields">
+        id,user_id, title, content, type, status, create_time, comment_count, score
+    </sql>
+    <sql id="insertFields">
+        user_id, title, content, type, status, create_time, comment_count, score
+    </sql>
+
+
     <select id="selectDiscussPosts" resultType="DiscussPost">
         SELECT id,user_id, title, content, type, status, create_time, comment_count, score
         FROM discuss_post
@@ -22,4 +30,9 @@
             AND user_id = #{userId}
         </if>
     </select>
+
+    <insert id="insertDiscussPost" parameterType="DiscussPost">
+        INSERT INTO discuss_post (user_id, title, content, type, status, create_time, comment_count, score)
+        VALUES (#{userId}, #{title},#{content},#{type},#{status},#{createTime},#{commentCount},#{score})
+    </insert>
 </mapper>

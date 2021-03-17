@@ -43,7 +43,7 @@ public class SensitiveFilter {
      */
     @PostConstruct
     public void init() {
-
+        long start = System.currentTimeMillis();
         try (
                 InputStream is = this.getClass().getClassLoader()
                         .getResourceAsStream("sensitive-words.txt");
@@ -59,6 +59,7 @@ public class SensitiveFilter {
             LOGGER.error("加载敏感词文件失败：" + e.getMessage());
             e.printStackTrace();
         }
+        LOGGER.info("构建前缀树时间：" + String.valueOf(System.currentTimeMillis() - start) + "ms");
 
     }
 
