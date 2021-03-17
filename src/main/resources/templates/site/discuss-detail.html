@@ -1,18 +1,18 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="icon" href="https://static.nowcoder.com/images/logo_87_87.png"/>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
-	<link rel="stylesheet" href="../css/global.css" />
-	<link rel="stylesheet" href="../css/discuss-detail.css" />
+	<link rel="stylesheet" href="../css/global.css" th:href="@{/css/global.css}"/>
+	<link rel="stylesheet" href="../css/discuss-detail.css" th:href="@{/css/discuss-detail.css}"/>
 	<title>牛客网-帖子详情</title>
 </head>
 <body>
 	<div class="nk-container">
 		<!-- 头部 -->
-		<header class="bg-dark sticky-top">
+		<header class="bg-dark sticky-top" th:replace="index::header">
 			<div class="container">
 				<!-- 导航 -->
 				<nav class="navbar navbar-expand-lg navbar-dark">
@@ -66,7 +66,7 @@
 				<!-- 标题 -->
 				<h6 class="mb-4">
 					<img src="http://static.nowcoder.com/images/img/icons/ico-discuss.png"/>
-					<span>备战春招，面试刷题跟他复习，一个月全搞定！</span>
+					<span th:utext="${post.title}">备战春招，面试刷题跟他复习，一个月全搞定！</span>
 					<div class="float-right">
 						<button type="button" class="btn btn-danger btn-sm">置顶</button>
 						<button type="button" class="btn btn-danger btn-sm">加精</button>
@@ -76,22 +76,25 @@
 				<!-- 作者 -->
 				<div class="media pb-3 border-bottom">
 					<a href="profile.html">
-						<img src="http://images.nowcoder.com/head/1t.png" class="align-self-start mr-4 rounded-circle user-header" alt="用户头像" >
+						<img src="http://images.nowcoder.com/head/1t.png" th:src="${user.headerUrl}"
+							 class="align-self-start mr-4 rounded-circle user-header" alt="用户头像">
 					</a>
 					<div class="media-body">
-						<div class="mt-0 text-warning">寒江雪</div>
+						<div class="mt-0 text-warning" th:utext="${user.username}">寒江雪</div>
 						<div class="text-muted mt-3">
-							发布于 <b>2019-04-15 15:32:18</b>
+							发布于 <b th:text="${#dates.format(post.createTime,'yyyy-MM-dd HH:mm:ss')}">2019-04-15
+							15:32:18</b>
 							<ul class="d-inline float-right">
 								<li class="d-inline ml-2"><a href="#" class="text-primary">赞 11</a></li>
 								<li class="d-inline ml-2">|</li>
-								<li class="d-inline ml-2"><a href="#replyform" class="text-primary">回帖 7</a></li>
+								<li class="d-inline ml-2"><a href="#replyform" class="text-primary">回帖 <span
+										th:text="${post.commentCount}">7</span> </a></li>
 							</ul>
 						</div>
 					</div>
 				</div>	
 				<!-- 正文 -->
-				<div class="mt-4 mb-3 content">
+				<div class="mt-4 mb-3 content" th:utext="${post.content}">
 					金三银四的金三已经到了，你还沉浸在过年的喜悦中吗？
 					如果是，那我要让你清醒一下了：目前大部分公司已经开启了内推，正式网申也将在3月份陆续开始，金三银四，春招的求职黄金时期已经来啦！！！
 					再不准备，作为19应届生的你可能就找不到工作了。。。作为20届实习生的你可能就找不到实习了。。。
@@ -105,7 +108,7 @@
 				<!-- 回帖数量 -->
 				<div class="row">
 					<div class="col-8">
-						<h6><b class="square"></b> <i>30</i>条回帖</h6>
+						<h6><b class="square"></b> <i th:text="${post.commentCount}">30</i>条回帖</h6>
 					</div>
 					<div class="col-4 text-right">
 						<a href="#replyform" class="btn btn-primary btn-sm">&nbsp;&nbsp;回&nbsp;&nbsp;帖&nbsp;&nbsp;</a>
@@ -114,44 +117,58 @@
 				<!-- 回帖列表 -->
 				<ul class="list-unstyled mt-4">
 					<!-- 第1条回帖 -->
-					<li class="media pb-3 pt-3 mb-3 border-bottom">
+					<li class="media pb-3 pt-3 mb-3 border-bottom" th:each="cvo:${comments}">
 						<a href="profile.html">
-							<img src="http://images.nowcoder.com/head/2t.png" class="align-self-start mr-4 rounded-circle user-header" alt="用户头像" >
+							<img src="http://images.nowcoder.com/head/2t.png" th:src="${cvo.user.headerUrl}"
+								 class="align-self-start mr-4 rounded-circle user-header" alt="用户头像">
 						</a>
 						<div class="media-body">
 							<div class="mt-0">
-								<span class="font-size-12 text-success">掉脑袋切切</span>
-								<span class="badge badge-secondary float-right floor">1#</span>
+								<span class="font-size-12 text-success" th:text="${cvo.user.username}">掉脑袋切切</span>
+								<span class="badge badge-secondary float-right floor">
+									<i th:text="${page.offset +cvoStat.count}">1</i>#
+								</span>
 							</div>
-							<div class="mt-2">
+							<div class="mt-2" th:text="${cvo.comment.content}">
 								这开课时间是不是有点晚啊。。。
 							</div>
 							<div class="mt-4 text-muted font-size-12">
-								<span>发布于 <b>2019-04-15 15:32:18</b></span>
+								<span>发布于 <b th:text="${#dates.format(cvo.comment.createTime, 'yyyy-MM-dd HH:mm:ss') }">2019-04-15 15:32:18</b></span>
 								<ul class="d-inline float-right">
 									<li class="d-inline ml-2"><a href="#" class="text-primary">赞(1)</a></li>
 									<li class="d-inline ml-2">|</li>
-									<li class="d-inline ml-2"><a href="#" class="text-primary">回复(2)</a></li>
+									<li class="d-inline ml-2"><a href="#" class="text-primary">回复(<span
+											th:text="${cvo.replyCount}">2</span> )</a></li>
 								</ul>
 							</div>
 							<!-- 回复列表 -->
 							<ul class="list-unstyled mt-4 bg-gray p-3 font-size-12 text-muted">
 								<!-- 第1条回复 -->
-								<li class="pb-3 pt-3 mb-3 border-bottom">
+								<li class="pb-3 pt-3 mb-3 border-bottom" th:each="rvo:${cvo.replys}">
 									<div>
-										<span><b class="text-info">寒江雪</b>:&nbsp;&nbsp;</span>
-										<span>这个是直播时间哈，觉得晚的话可以直接看之前的完整录播的~</span>
+										<span th:if="${rvo.target==null}">
+											<b class="text-info" th:text="${rvo.user.username}">寒江雪</b>:&nbsp;&nbsp;
+										</span>
+										<span th:if="${rvo.target!=null}">
+
+											<i class="text-info" th:text="${rvo.user.username}">Sissi</i> 回复
+											<b class="text-info" th:text="${rvo.target.username}">寒江雪</b>:&nbsp;&nbsp;
+										</span>
+										<span th:text="${rvo.reply.content}">这个是直播时间哈，觉得晚的话可以直接看之前的完整录播的~</span>
 									</div>
 									<div class="mt-3">
-										<span>2019-04-15 15:32:18</span>
+										<span th:text="${#dates.format(rvo.reply.createTime,'yyyy-MM-dd HH:mm:ss')}">2019-04-15 15:32:18</span>
 										<ul class="d-inline float-right">
 											<li class="d-inline ml-2"><a href="#" class="text-primary">赞(1)</a></li>
 											<li class="d-inline ml-2">|</li>
-											<li class="d-inline ml-2"><a href="#huifu01" data-toggle="collapse" class="text-primary">回复</a></li>
+											<li class="d-inline ml-2"><a href="#huifu01"
+																		 th:href="|#huifu-${rvoStat.count}|"
+																		 data-toggle="collapse"
+																		 class="text-primary">回复</a></li>
 										</ul>
-										<div id="huifu01" class="mt-4 collapse">
+										<div id="huifu01" th:id="|huifu-${rvoStat.count}|" class="mt-4 collapse">
 											<div>
-												<input type="text" class="input-size" placeholder="回复寒江雪"/>
+												<input type="text" class="input-size" placeholder="回复"/>
 											</div>
 											<div class="text-right mt-2">
 												<button type="button" class="btn btn-primary btn-sm" onclick="#">&nbsp;&nbsp;回&nbsp;&nbsp;复&nbsp;&nbsp;</button>
@@ -159,6 +176,7 @@
 										</div>
 									</div>								
 								</li>
+								<!--/*-->
 								<!-- 第2条回复 -->
 								<li class="pb-3 pt-3 mb-3 border-bottom">
 									<div>
@@ -182,6 +200,7 @@
 										</div>																	
 									</div>								
 								</li>
+								<!--*/-->
 								<!-- 回复输入框 -->
 								<li class="pb-3 pt-3">
 									<div>
@@ -194,6 +213,7 @@
 							</ul>
 						</div>
 					</li>
+					<!--/*-->
 					<!-- 第2条回帖 -->
 					<li class="media pb-3 pt-3 mb-3 border-bottom">
 						<a href="profile.html">
@@ -228,10 +248,11 @@
 								</li>
 							</ul>
 						</div>
-					</li>									
+					</li>
+					<!--*/-->
 				</ul>
 				<!-- 分页 -->
-				<nav class="mt-5">
+				<nav class="mt-5" th:replace="index::pagination">
 					<ul class="pagination justify-content-center">
 						<li class="page-item"><a class="page-link" href="#">首页</a></li>
 						<li class="page-item disabled"><a class="page-link" href="#">上一页</a></li>
@@ -324,6 +345,6 @@
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
-	<script src="../js/global.js"></script>
+	<script src="../js/global.js" th:src="@{/js/global.js}"></script>
 </body>
 </html>

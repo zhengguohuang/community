@@ -5,8 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import tech.turl.community.dao.UserMapper;
 import tech.turl.community.entity.Demo;
 import tech.turl.community.service.AlphaService;
+import tech.turl.community.service.DiscussPostService;
 import tech.turl.community.util.CommunityUtil;
 
 import javax.servlet.http.Cookie;
@@ -25,6 +27,12 @@ import java.util.Map;
 public class AlphaController {
     @Autowired
     AlphaService alphaService;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private DiscussPostService discussPostService;
 
     @RequestMapping("/hello")
     @ResponseBody
@@ -200,4 +208,6 @@ public class AlphaController {
         System.out.println(age);
         return CommunityUtil.getJSONString(0, "操作成功！");
     }
+
+
 }
