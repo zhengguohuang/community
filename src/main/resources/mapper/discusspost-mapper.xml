@@ -41,4 +41,8 @@
         FROM discuss_post
         WHERE id = #{id}
     </select>
+
+    <update id="updateCommentCount">
+        UPDATE discuss_post SET comment_count = #{commentCount} WHERE id = #{id}
+    </update>
 </mapper>

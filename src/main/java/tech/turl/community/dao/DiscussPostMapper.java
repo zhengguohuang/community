@@ -46,4 +46,13 @@ public interface DiscussPostMapper {
      * @return
      */
     DiscussPost selectDiscussPostById(int id);
+
+    /**
+     * 更新帖子评论数量
+     *
+     * @param id
+     * @param commentCount
+     * @return
+     */
+    int updateCommentCount(@Param("id") int id, @Param("commentCount") int commentCount);
 }
