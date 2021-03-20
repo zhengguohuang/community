@@ -34,6 +34,7 @@ public class MessageController {
 
     @GetMapping("/letter/list")
     public String getLetterList(Model model, Page page) {
+
         User user = hostHolder.getUser();
         // 分页信息
         page.setLimit(5);
@@ -126,6 +127,7 @@ public class MessageController {
     @PostMapping("/letter/send")
     @ResponseBody
     public String sendLetter(String toName, String content) {
+        Integer.parseInt("abc");
         User target = userService.findUserByName(toName);
         if (target == null) {
             return CommunityUtil.getJSONString(1, "目标用户不存在");
