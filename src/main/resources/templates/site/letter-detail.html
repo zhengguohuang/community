@@ -1,18 +1,18 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="icon" href="https://static.nowcoder.com/images/logo_87_87.png"/>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
-	<link rel="stylesheet" href="../css/global.css" />
-	<link rel="stylesheet" href="../css/letter.css" />
+	<link rel="stylesheet" href="../css/global.css" th:href="@{/css/global.css}"/>
+	<link rel="stylesheet" href="../css/letter.css" th:href="@{/css/letter.css}"/>
 	<title>牛客网-私信详情</title>
 </head>
 <body>
 	<div class="nk-container">
 		<!-- 头部 -->
-		<header class="bg-dark sticky-top">
+		<header class="bg-dark sticky-top" th:replace="index :: header">
 			<div class="container">
 				<!-- 导航 -->
 				<nav class="navbar navbar-expand-lg navbar-dark">
@@ -64,10 +64,11 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-8">
-						<h6><b class="square"></b> 来自 <i class="text-success">落基山脉下的闲人</i> 的私信</h6>
+						<h6><b class="square"></b> 来自 <i class="text-success" th:utext="${target.username}">落基山脉下的闲人</i>
+							的私信</h6>
 					</div>
 					<div class="col-4 text-right">
-						<button type="button" class="btn btn-secondary btn-sm" onclick="location.href='letter.html';">返回</button>
+						<button type="button" class="btn btn-secondary btn-sm" onclick="back();">返回</button>
 						<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#sendModal">给TA私信</button>
 					</div>
 				</div>
@@ -85,7 +86,8 @@
 								<form>
 									<div class="form-group">
 										<label for="recipient-name" class="col-form-label">发给：</label>
-										<input type="text" class="form-control" id="recipient-name" value="落基山脉下的闲人">
+										<input type="text" class="form-control" id="recipient-name"
+											   th:value="${target.username}" value="落基山脉下的闲人">
 									</div>
 									<div class="form-group">
 										<label for="message-text" class="col-form-label">内容：</label>
@@ -116,23 +118,27 @@
 				
 				<!-- 私信列表 -->
 				<ul class="list-unstyled mt-4">
-					<li class="media pb-3 pt-3 mb-2">
+					<li class="media pb-3 pt-3 mb-2" th:each="map : ${letters}">
 						<a href="profile.html">
-							<img src="http://images.nowcoder.com/head/8t.png" class="mr-4 rounded-circle user-header" alt="用户头像" >
+							<img src="http://images.nowcoder.com/head/8t.png" th:src="${map.fromUser.headerUrl}"
+								 class="mr-4 rounded-circle user-header" alt="用户头像">
 						</a>
 						<div class="toast show d-lg-block" role="alert" aria-live="assertive" aria-atomic="true">
 							<div class="toast-header">
-								<strong class="mr-auto">落基山脉下的闲人</strong>
-								<small>2019-04-25 15:49:32</small>
+								<strong class="mr-auto" th:text="${map.fromUser.username}">落基山脉下的闲人</strong>
+								<small th:text="${#dates.format(map.letter.createTime,'yyyy-MM-dd HH:mm:ss')}">
+									2019-04-25 15:49:32
+								</small>
 								<button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
 									<span aria-hidden="true">&times;</span>
 								</button>
 							</div>
-							<div class="toast-body">
+							<div class="toast-body" th:utext="${map.letter.content}">
 								君不见, 黄河之水天上来, 奔流到海不复回!
 							</div>
 						</div>
 					</li>
+					<!--/*-->
 					<li class="media pb-3 pt-3 mb-2">
 						<a href="profile.html">
 							<img src="http://images.nowcoder.com/head/1t.png" class="mr-4 rounded-circle user-header" alt="用户头像" >
@@ -200,10 +206,11 @@
 								岑夫子, 丹丘生, 将进酒, 杯莫停. 钟鼓馔玉不足贵, 但愿长醉不复醒!
 							</div>
 						</div>
-					</li>																																																										
+					</li>
+					<!--*/-->
 				</ul>
 				<!-- 分页 -->
-				<nav class="mt-5">
+				<nav class="mt-5" th:replace="index :: pagination">
 					<ul class="pagination justify-content-center">
 						<li class="page-item"><a class="page-link" href="#">首页</a></li>
 						<li class="page-item disabled"><a class="page-link" href="#">上一页</a></li>
@@ -285,7 +292,12 @@
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
-	<script src="../js/global.js"></script>
-	<script src="../js/letter.js"></script>
+	<script src="../js/global.js" th:src="@{/js/global.js}"></script>
+	<script src="../js/letter.js" th:src="@{/js/letter.js}"></script>
+	<script>
+        function back() {
+            location.href = CONTEXT_PATH + "/letter/list";
+        }
+	</script>
 </body>
 </html>
