@@ -1,17 +1,17 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="icon" href="https://static.nowcoder.com/images/logo_87_87.png"/>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
-	<link rel="stylesheet" href="../css/global.css" />
+	<link rel="stylesheet" href="../css/global.css" th:href="@{/css/global.css}"/>
 	<title>牛客网-个人主页</title>
 </head>
 <body>
 	<div class="nk-container">
 		<!-- 头部 -->
-		<header class="bg-dark sticky-top">
+		<header class="bg-dark sticky-top" th:replace="index :: header">
 			<div class="container">
 				<!-- 导航 -->
 				<nav class="navbar navbar-expand-lg navbar-dark">
@@ -77,19 +77,21 @@
 				</div>
 				<!-- 个人信息 -->
 				<div class="media mt-5">
-					<img src="http://images.nowcoder.com/head/1t.png" class="align-self-start mr-4 rounded-circle" alt="用户头像" style="width:50px;">
+					<img src="http://images.nowcoder.com/head/1t.png" th:src="${user.headerUrl}"
+						 class="align-self-start mr-4 rounded-circle" alt="用户头像" style="width:50px;">
 					<div class="media-body">
 						<h5 class="mt-0 text-warning">
-							<span>nowcoder</span>
+							<span th:text="${user.username}">nowcoder</span>
 							<button type="button" class="btn btn-info btn-sm float-right mr-5 follow-btn">关注TA</button>
 						</h5>
 						<div class="text-muted mt-3">
-							<span>注册于 <i class="text-muted">2015-06-12 15:20:12</i></span>
+							<span>注册于 <i class="text-muted"
+										 th:text="${#dates.format(user.createTime, 'yyyy-MM-dd HH:mm:ss')}">2015-06-12 15:20:12</i></span>
 						</div>
 						<div class="text-muted mt-3 mb-5">
 							<span>关注了 <a class="text-primary" href="followee.html">5</a> 人</span>
 							<span class="ml-4">关注者 <a class="text-primary" href="follower.html">123</a> 人</span>
-							<span class="ml-4">获得了 <i class="text-danger">87</i> 个赞</span>
+							<span class="ml-4">获得了 <i class="text-danger" th:text="${likeCount}">87</i> 个赞</span>
 						</div>
 					</div>
 				</div>
@@ -162,7 +164,7 @@
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
-	<script src="../js/global.js"></script>
-	<script src="../js/profile.js"></script>
+	<script src="../js/global.js" th:src="@{/js/global.js}"></script>
+	<script src="../js/profile.js" th:src="@{/js/profile.js}"></script>
 </body>
 </html>

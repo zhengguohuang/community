@@ -8,7 +8,9 @@ import tech.turl.community.entity.DiscussPost;
 import tech.turl.community.entity.Page;
 import tech.turl.community.entity.User;
 import tech.turl.community.service.DiscussPostService;
+import tech.turl.community.service.LikeService;
 import tech.turl.community.service.UserService;
+import tech.turl.community.util.CommunityConstant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,11 +22,14 @@ import java.util.Map;
  * @date 2021/3/15
  */
 @Controller
-public class HomeController {
+public class HomeController implements CommunityConstant {
     @Autowired
     private DiscussPostService discussPostService;
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private LikeService likeService;
 
     @GetMapping("/")
     public String getIndexPage(Model model, Page page){
@@ -40,6 +45,10 @@ public class HomeController {
                 map.put("post", post);
                 User user = userService.findUserById(post.getUserId());
                 map.put("user", user);
+
+                long likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_POST, post.getId());
+                map.put("likeCount", likeCount);
+
                 discussPosts.add(map);
             }
         }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 import tech.turl.community.annotation.LoginRequired;
 import tech.turl.community.entity.User;
+import tech.turl.community.service.LikeService;
 import tech.turl.community.service.UserService;
 import tech.turl.community.util.CommunityUtil;
 import tech.turl.community.util.HostHolder;
@@ -48,6 +49,9 @@ public class UserController {
 
     @Autowired
     private HostHolder hostHolder;
+
+    @Autowired
+    private LikeService likeService;
 
     /**
      * 跳转设置页面
@@ -130,6 +134,20 @@ public class UserController {
         } catch (IOException e) {
             LOGGER.error("读取文件失败：", e.getMessage());
         }
+    }
+
+    @GetMapping("/profile/{userId}")
+    public String getProfilePage(@PathVariable("userId") int userId, Model model) {
+        User user = userService.findUserById(userId);
+        if (user == null) {
+            throw new RuntimeException("该用户不存在");
+        }
+        // 用户
+        model.addAttribute("user", user);
+        // 点赞数量
+        int likeCount = likeService.findUserLikeCount(userId);
+        model.addAttribute("likeCount", likeCount);
+        return "/site/profile";
     }
 
 

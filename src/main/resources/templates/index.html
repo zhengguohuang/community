@@ -42,7 +42,8 @@
 									 class="rounded-circle" style="width:30px;"/>
 							</a>
 							<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-								<a class="dropdown-item text-center" href="site/profile.html">个人主页</a>
+								<a class="dropdown-item text-center" href="site/profile.html"
+								   th:href="@{|/user/profile/${loginUser.id}|}">个人主页</a>
                                 <a class="dropdown-item text-center" href="site/setting.html"
                                    th:href="@{/user/setting}">账号设置</a>
 								<a class="dropdown-item text-center" href="site/login.html"
@@ -125,7 +126,7 @@
 			<!-- 帖子列表 -->
 			<ul class="list-unstyled">
 				<li class="media pb-3 pt-3 mb-3 border-bottom" th:each="map:${discussPosts}">
-					<a href="site/profile.html">
+					<a href="site/profile.html" th:href="@{|/user/profile/${map.user.id}|}">
 						<img th:src="${map.user.headerUrl}" class="mr-4 rounded-circle" alt="用户头像" style="width:50px;height:50px;">
 					</a>
 					<div class="media-body">
@@ -137,7 +138,8 @@
 						<div class="text-muted font-size-12">
 							<u class="mr-3" th:utext="${map.user.username}">寒江雪</u> 发布于 <b th:text="${#dates.format(map.post.createTime,'yyyy-MM-dd HH:mm:ss')}">2019-04-15 15:32:18</b>
 							<ul class="d-inline float-right">
-								<li class="d-inline ml-2">赞 11</li>
+								<li class="d-inline ml-2">
+									赞 <i th:text="${map.likeCount}">11</i></li>
 								<li class="d-inline ml-2">|</li>
 								<li class="d-inline ml-2">回帖 <span th:text="${map.post.commentCount}">7</span></li>
 							</ul>
