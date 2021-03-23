@@ -8,6 +8,7 @@ import tech.turl.community.entity.LoginTicket;
  * @date 2021/3/15
  */
 @Mapper
+@Deprecated
 public interface LoginTicketMapper {
     /**
      * 插入login_ticket表
