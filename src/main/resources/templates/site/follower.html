@@ -1,17 +1,17 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="icon" href="https://static.nowcoder.com/images/logo_87_87.png"/>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
-	<link rel="stylesheet" href="../css/global.css" />
+	<link rel="stylesheet" href="../css/global.css" th:href="@{/css/global.css}"/>
 	<title>牛客网-关注</title>
 </head>
 <body>
 	<div class="nk-container">
 		<!-- 头部 -->
-		<header class="bg-dark sticky-top">
+		<header class="bg-dark sticky-top" th:replace="index :: header">
 			<div class="container">
 				<!-- 导航 -->
 				<nav class="navbar navbar-expand-lg navbar-dark">
@@ -65,17 +65,45 @@
 					<!-- 选项 -->
 					<ul class="nav nav-tabs mb-3">
 						<li class="nav-item">
-							<a class="nav-link position-relative" href="followee.html"><i class="text-info">Nowcoder</i> 关注的人</a>
+							<a class="nav-link position-relative" th:href="@{|/followees/${user.id}|}">
+								<i class="text-info" th:utext="${user.username}">Nowcoder</i> 关注的人
+							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link position-relative active" href="follower.html">关注 <i class="text-info">Nowcoder</i> 的人</a>
+							<a class="nav-link position-relative active" th:href="@{|/followers/${user.id}|}">
+								关注 <i class="text-info" th:utext="${user.username}">Nowcoder</i> 的人
+							</a>
 						</li>
 					</ul>
-					<a href="profile.html" class="text-muted position-absolute rt-0">返回个人主页&gt;</a>
+					<a href="profile.html" th:href="@{|/user/profile/${user.id}|}"
+					   class="text-muted position-absolute rt-0">返回个人主页&gt;</a>
 				</div>
 				
 				<!-- 粉丝列表 -->
 				<ul class="list-unstyled">
+					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative" th:each="map:${users}">
+						<a href="profile.html" th:href="@{|/user/profile/${map.user.id}|}">
+							<img src="http://images.nowcoder.com/head/8t.png" th:src="${map.user.headerUrl}"
+								 class="mr-4 rounded-circle user-header" alt="用户头像">
+						</a>
+						<div class="media-body">
+							<h6 class="mt-0 mb-3">
+								<span class="text-success" th:utext="${map.user.username}">落基山脉下的闲人</span>
+								<span class="float-right text-muted font-size-12">关注于
+									<i th:text="${#dates.format(map.followTime, 'yyyy-MM-dd HH:mm:ss')}">2019-04-28 14:13:25</i>
+								</span>
+							</h6>
+							<div>
+								<input type="hidden" id="entityId" th:value="${map.user.id}">
+								<button type="button"
+										th:class="|btn ${map.hasFollowed?'btn-secondary':'btn-info'} btn-sm float-right mr-5 follow-btn|"
+										th:text="${map.hasFollowed?'已关注':'关注TA'}"
+										th:if="${loginUser!=null&&loginUser.id!=map.user.id}">关注TA
+								</button>
+							</div>
+						</div>
+					</li>
+					<!--/*-->
 					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative">
 						<a href="profile.html">
 							<img src="http://images.nowcoder.com/head/8t.png" class="mr-4 rounded-circle user-header" alt="用户头像" >
@@ -132,23 +160,10 @@
 							</div>
 						</div>
 					</li>
-					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative">
-						<a href="profile.html">
-							<img src="http://images.nowcoder.com/head/8t.png" class="mr-4 rounded-circle user-header" alt="用户头像" >
-						</a>
-						<div class="media-body">
-							<h6 class="mt-0 mb-3">
-								<span class="text-success">落基山脉下的闲人</span>
-								<span class="float-right text-muted font-size-12">关注于 <i>2019-04-28 14:13:25</i></span>
-							</h6>
-							<div>
-								<button type="button" class="btn btn-info btn-sm float-right follow-btn">关注TA</button>
-							</div>
-						</div>
-					</li>																				
+					<!--*/-->
 				</ul>
 				<!-- 分页 -->
-				<nav class="mt-5">
+				<nav class="mt-5" th:replace="index::pagination">
 					<ul class="pagination justify-content-center">
 						<li class="page-item"><a class="page-link" href="#">首页</a></li>
 						<li class="page-item disabled"><a class="page-link" href="#">上一页</a></li>
@@ -230,7 +245,7 @@
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
-	<script src="../js/global.js"></script>
-	<script src="../js/profile.js"></script>
+	<script src="../js/global.js" th:src="@{/js/global.js}"></script>
+	<script src="../js/profile.js" th:src="@{/js/profile.js}"></script>
 </body>
 </html>

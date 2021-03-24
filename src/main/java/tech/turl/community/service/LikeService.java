@@ -62,6 +62,7 @@ public class LikeService {
 
     /**
      * 查询某人对某实体的点赞状态
+     * 1表示已点赞
      *
      * @param userId
      * @param entityType

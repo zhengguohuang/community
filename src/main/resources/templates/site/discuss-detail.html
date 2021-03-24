@@ -86,7 +86,8 @@
 							15:32:18</b>
 							<ul class="d-inline float-right">
 								<li class="d-inline ml-2">
-									<a href="javascript:;" th:onclick="|like(this, 1, ${post.id}, ${post.userId});|"
+									<a href="javascript:;"
+									   th:onclick="|like(this, 1, ${post.id}, ${post.userId}, ${post.id});|"
 									   class="text-primary">
 										<b th:text="${likeStatus==1?'已赞':'赞'}">赞</b> <i th:text="${likeCount}">11</i>
 									</a>
@@ -142,7 +143,7 @@
 								<ul class="d-inline float-right">
 									<li class="d-inline ml-2">
 										<a href="javascript:;"
-										   th:onclick="|like(this, 2, ${cvo.comment.id} ,${cvo.comment.userId});|"
+										   th:onclick="|like(this, 2, ${cvo.comment.id} ,${cvo.comment.userId}, ${post.id});|"
 										   class="text-primary">
 											<b th:text="${cvo.likeStatus==1?'已赞':'赞'}">赞</b>(<i
 												th:text="${cvo.likeCount}">1</i>)
@@ -173,7 +174,7 @@
 										<ul class="d-inline float-right">
 											<li class="d-inline ml-2">
 												<a href="javascript:;"
-												   th:action="|like(this, 2, ${rvo.reply.id}, ${rvo.reply.userId})|"
+												   th:action="|like(this, 2, ${rvo.reply.id}, ${rvo.reply.userId}, ${post.id})|"
 												   class="text-primary">
 													<b th:text="${rovolikeStatus==1?'已赞':'赞'}">赞</b>(<i
 														th:text="${rvo.likeCount}">1</i>)

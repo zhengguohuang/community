@@ -66,4 +66,42 @@
         </foreach>
     </update>
 
+    <select id="selectLatesNotice" resultType="Message">
+        SELECT id, from_id, to_id, conversation_id, content, status, create_time
+        FROM message
+        WHERE id IN (
+        SELECT max(id) FROM message
+        WHERE status != 2
+        AND from_id = 1
+        AND to_id = #{userId}
+        AND conversation_id = #{topic}
+        )
+    </select>
+    <select id="selectNoticeCount" resultType="int">
+        SELECT count(id) FROM message
+        WHERE status != 2
+        AND from_id = 1
+        AND to_id = #{userId}
+        AND conversation_id = #{topic}
+    </select>
+    <select id="selectNoticeUnreadCount" resultType="int">
+        SELECT count(id) FROM message
+        WHERE status = 0
+        AND from_id = 1
+        AND to_id = #{userId}
+        <if test="topic!=null">
+            AND conversation_id = #{topic}
+        </if>
+    </select>
+    <select id="selectNotices" resultType="Message">
+        SELECT id, from_id, to_id, conversation_id, content, status, create_time
+        FROM message
+        WHERE status!=2
+        AND from_id = 1
+        AND to_id = #{userId}
+        AND conversation_id = #{topic}
+        ORDER by create_time DESC
+        limit #{offset}, #{limit}
+    </select>
+
 </mapper>

@@ -65,5 +65,17 @@ public interface CommentMapper {
     })
     int insertComment(Comment comment);
 
+    /**
+     * 通过id查找评论
+     *
+     * @param id 评论id
+     * @return 评论
+     */
+    @Select({
+            "select id, user_id, entity_type, entity_id, target_id, content, status, create_time",
+            "from comment",
+            "where id = #{id}",
+    })
+    Comment selectCommentsById(@Param("id") int id);
 
 }

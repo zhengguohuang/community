@@ -82,15 +82,26 @@
 					<div class="media-body">
 						<h5 class="mt-0 text-warning">
 							<span th:text="${user.username}">nowcoder</span>
-							<button type="button" class="btn btn-info btn-sm float-right mr-5 follow-btn">关注TA</button>
+							<input type="hidden" id="entityId" th:value="${user.id}">
+							<button type="button"
+									th:class="|btn ${hasFollowed?'btn-secondary':'btn-info'} btn-sm float-right mr-5 follow-btn|"
+									th:text="${hasFollowed?'已关注':'关注TA'}"
+									th:if="${loginUser!=null&&loginUser.id!=user.id}">关注TA
+							</button>
 						</h5>
 						<div class="text-muted mt-3">
 							<span>注册于 <i class="text-muted"
 										 th:text="${#dates.format(user.createTime, 'yyyy-MM-dd HH:mm:ss')}">2015-06-12 15:20:12</i></span>
 						</div>
 						<div class="text-muted mt-3 mb-5">
-							<span>关注了 <a class="text-primary" href="followee.html">5</a> 人</span>
-							<span class="ml-4">关注者 <a class="text-primary" href="follower.html">123</a> 人</span>
+							<span>关注了
+								<a class="text-primary" href="followee.html" th:href="@{|/followees/${user.id}|}"
+								   th:text="${followeeCount}">5</a> 人
+							</span>
+							<span class="ml-4">关注者
+								<a class="text-primary" href="follower.html" th:href="@{|/followers/${user.id}|}"
+								   th:text="${followerCount}">123</a> 人
+							</span>
 							<span class="ml-4">获得了 <i class="text-danger" th:text="${likeCount}">87</i> 个赞</span>
 						</div>
 					</div>

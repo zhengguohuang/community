@@ -7,6 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import tech.turl.community.controller.interceptor.AlphaInterceptor;
 import tech.turl.community.controller.interceptor.LoginRequiredInterceptor;
 import tech.turl.community.controller.interceptor.LoginTicketInterceptor;
+import tech.turl.community.controller.interceptor.MessageInterceptor;
 
 /**
  * @author zhengguohuang
@@ -23,6 +24,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Autowired
     private LoginRequiredInterceptor loginRequiredInterceptor;
 
+    @Autowired
+    private MessageInterceptor messageInterceptor;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(alphaInterceptor)
@@ -33,6 +37,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/*/*.css", "/*/*.js", "/*/*.png", "/*/*.jpg", "/*/*.jpeg");
 
         registry.addInterceptor(loginRequiredInterceptor)
+                .excludePathPatterns("/*/*.css", "/*/*.js", "/*/*.png", "/*/*.jpg", "/*/*.jpeg");
+
+        registry.addInterceptor(messageInterceptor)
                 .excludePathPatterns("/*/*.css", "/*/*.js", "/*/*.png", "/*/*.jpg", "/*/*.jpeg");
     }
 }

@@ -28,7 +28,11 @@
 						</li>
 						<li class="nav-item ml-3 btn-group-vertical" th:if="${loginUser!=null}">
 							<a class="nav-link position-relative" href="site/letter.html"
-							   th:href="@{/letter/list}">消息<span class="badge badge-danger">12</span></a>
+                               th:href="@{/letter/list}">消息
+                                <span class="badge badge-danger" th:text="${allUnreadCount!=0?allUnreadCount:''}">
+                                    12
+                                </span>
+                            </a>
 						</li>
 						<li class="nav-item ml-3 btn-group-vertical" th:if="${loginUser==null}">
 							<a class="nav-link" href="site/register.html" th:href="@{/register}">注册</a>
