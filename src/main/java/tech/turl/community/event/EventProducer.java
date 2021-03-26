@@ -12,6 +12,7 @@ import tech.turl.community.entity.Event;
  */
 @Component
 public class EventProducer {
+
     @Autowired
     private KafkaTemplate kafkaTemplate;
 

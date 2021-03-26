@@ -31,7 +31,7 @@
         </if>
     </select>
 
-    <insert id="insertDiscussPost" parameterType="DiscussPost">
+    <insert id="insertDiscussPost" parameterType="DiscussPost" keyProperty="id">
         INSERT INTO discuss_post (user_id, title, content, type, status, create_time, comment_count, score)
         VALUES (#{userId}, #{title},#{content},#{type},#{status},#{createTime},#{commentCount},#{score})
     </insert>
