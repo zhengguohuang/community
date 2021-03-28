@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
  * @date 2021/03/16
  */
 @Component
+@Deprecated
 public class LoginRequiredInterceptor implements HandlerInterceptor {
     @Autowired
     private HostHolder hostHolder;

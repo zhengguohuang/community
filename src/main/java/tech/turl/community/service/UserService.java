@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -15,10 +16,7 @@ import tech.turl.community.util.CommunityUtil;
 import tech.turl.community.util.MailClient;
 import tech.turl.community.util.RedisKeyUtil;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -49,7 +47,7 @@ public class UserService implements CommunityConstant {
     private RedisTemplate redisTemplate;
 
 
-    public User findUserById(int id){
+    public User findUserById(int id) {
 //        return userMapper.selectById(id);
         User user = getCache(id);
         if (user == null) {
@@ -61,34 +59,34 @@ public class UserService implements CommunityConstant {
     /**
      * 注册
      */
-    public Map<String, Object> register(User user){
+    public Map<String, Object> register(User user) {
         Map<String, Object> map = new HashMap<>(16);
         // 空值处理
-        if(user == null){
+        if (user == null) {
             throw new IllegalArgumentException("参数不能为空！");
         }
-        if(StringUtils.isBlank(user.getUsername())){
+        if (StringUtils.isBlank(user.getUsername())) {
             map.put("usernameMsg", "账号不能为空");
             return map;
         }
-        if(StringUtils.isBlank(user.getPassword())){
+        if (StringUtils.isBlank(user.getPassword())) {
             map.put("passwordMsg", "密码不能为空");
             return map;
         }
-        if(StringUtils.isBlank(user.getEmail())){
+        if (StringUtils.isBlank(user.getEmail())) {
             map.put("emailMsg", "邮箱不能为空");
             return map;
         }
 
         // 验证账号
         User u = userMapper.selectByName(user.getUsername());
-        if(u != null){
+        if (u != null) {
             map.put("usernameMsg", "该账号已存在！");
             return map;
         }
         // 验证邮箱
         u = userMapper.selectByEmail(user.getEmail());
-        if(u != null){
+        if (u != null) {
             map.put("emailMsg", "该邮箱已被注册！");
             return map;
         }
@@ -116,15 +114,15 @@ public class UserService implements CommunityConstant {
         return map;
     }
 
-    public int activation(int userId, String code){
+    public int activation(int userId, String code) {
         User user = userMapper.selectById(userId);
-        if(user.getStatus() == 1){
+        if (user.getStatus() == 1) {
             return ACTIVATION_SUCCESS;
-        }else if(user.getActivationCode().equals(code)){
+        } else if (user.getActivationCode().equals(code)) {
             userMapper.updateStatus(userId, 1);
             clearCache(userId);
             return ACTIVATION_SUCCESS;
-        }else {
+        } else {
             return ACTIVATION_FAILED;
         }
     }
@@ -258,6 +256,29 @@ public class UserService implements CommunityConstant {
     private void clearCache(int userId) {
         String redisKey = RedisKeyUtil.getUserKey(userId);
         redisTemplate.delete(redisKey);
+    }
+
+    /**
+     * 获得用户权限
+     *
+     * @param userId
+     * @return
+     */
+    public Collection<? extends GrantedAuthority> getAuthorities(int userId) {
+        User user = this.findUserById(userId);
+
+        List<GrantedAuthority> list = new ArrayList<>();
+        list.add(() -> {
+            switch (user.getType()) {
+                case 1:
+                    return AUTHORITY_ADMIN;
+                case 2:
+                    return AUTHORITY_MODERATOR;
+                default:
+                    return AUTHORITY_USER;
+            }
+        });
+        return list;
     }
 
 }

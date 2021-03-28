@@ -45,4 +45,11 @@
     <update id="updateCommentCount">
         UPDATE discuss_post SET comment_count = #{commentCount} WHERE id = #{id}
     </update>
+
+    <update id="updateType">
+        UPDATE discuss_post SET type = #{type} WHERE id = #{id}
+    </update>
+    <update id="updateStatus">
+        UPDATE discuss_post SET status = #{status} WHERE id = #{id}
+    </update>
 </mapper>
