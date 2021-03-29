@@ -2,7 +2,7 @@
 
 ## 项目简介
 
-一个仿照牛客网实现的讨论区，不仅实现了基本的注册、登录、发帖、评论、回复、私信等功能，同时使用前缀树实现敏感词过滤；使用 Redis 实现点赞与关注；使用 Kafka 处理发送评论、点赞和关注等系统通知；使用 Elasticsearch 实现全局搜索，关键词高亮显示；使用 wkhtmltopdf 生成长图和 PDF，实现网站 UV 和 DAU 统计；并将用户头像等信息存于七牛云服务器。
+一个仿照牛客网实现的讨论区，不仅实现了基本的注册、登录、发帖、评论、回复、私信等功能，同时使用前缀树实现敏感词过滤；使用 Redis 实现点赞与关注；使用 Kafka 处理发送评论、点赞和关注等系统通知；使用 Elasticsearch 实现全局搜索，关键词高亮显示；使用 wkhtmltopdf 生成长图和 PDF；实现网站 UV 和 DAU 统计；并将用户头像等信息存于七牛云服务器。
 
 ## 在线演示地址
 
@@ -26,9 +26,9 @@ https://community.turl.tech
 - [x] 关注
 - [x] 系统通知
 - [x] 搜索
-- [ ] 权限控制
-- [ ] 置顶、加精、删除
-- [ ] 网站统计
+- [x] 权限控制
+- [x] 置顶、加精、删除
+- [x] 网站统计
 - [ ] 任务执行和调度
 - [ ] 热帖
 
@@ -61,6 +61,7 @@ create database community;
 use community;
 souuce /path/to/sql/init_schema.sql;
 souuce /path/to/sql/init_data.sql;
+souuce /path/to/sql/tables_mysql_innodb.sql;
 ```
 
 
