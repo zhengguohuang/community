@@ -27,12 +27,10 @@ import java.util.List;
  * @date 2021/03/26
  */
 @Service
-public class ElasticSearchService {
-    @Autowired
-    private DiscussPostRepository discussPostRepository;
+public class ElasticsearchService {
+    @Autowired private DiscussPostRepository discussPostRepository;
 
-    @Autowired
-    private ElasticsearchRestTemplate elasticsearchRestTemplate;
+    @Autowired private ElasticsearchRestTemplate elasticsearchRestTemplate;
 
     /**
      * 插入或修改帖子
@@ -62,18 +60,24 @@ public class ElasticSearchService {
      */
     public Page<DiscussPost> searchDiscussPost(String keyword, int current, int limit) {
         Pageable pageable = PageRequest.of(current, limit);
-        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
-                .withQuery(QueryBuilders.multiMatchQuery(keyword, "title", "content"))
-                .withSort(SortBuilders.fieldSort("type").order(SortOrder.DESC))
-                .withSort(SortBuilders.fieldSort("score").order(SortOrder.DESC))
-                .withSort(SortBuilders.fieldSort("createTime").order(SortOrder.DESC))
-                .withPageable(pageable)
-                .withHighlightFields(
-                        new HighlightBuilder.Field("title").preTags("<em>").postTags("</em>"),
-                        new HighlightBuilder.Field("content").preTags("<em>").postTags("</em>")
-                ).build();
+        NativeSearchQuery searchQuery =
+                new NativeSearchQueryBuilder()
+                        .withQuery(QueryBuilders.multiMatchQuery(keyword, "title", "content"))
+                        .withSort(SortBuilders.fieldSort("type").order(SortOrder.DESC))
+                        .withSort(SortBuilders.fieldSort("score").order(SortOrder.DESC))
+                        .withSort(SortBuilders.fieldSort("createTime").order(SortOrder.DESC))
+                        .withPageable(pageable)
+                        .withHighlightFields(
+                                new HighlightBuilder.Field("title")
+                                        .preTags("<em>")
+                                        .postTags("</em>"),
+                                new HighlightBuilder.Field("content")
+                                        .preTags("<em>")
+                                        .postTags("</em>"))
+                        .build();
 
-        SearchHits<DiscussPost> searchHits = elasticsearchRestTemplate.search(searchQuery, DiscussPost.class);
+        SearchHits<DiscussPost> searchHits =
+                elasticsearchRestTemplate.search(searchQuery, DiscussPost.class);
         if (searchHits.getTotalHits() <= 0) {
             return null;
         }
@@ -94,5 +98,4 @@ public class ElasticSearchService {
         }
         return new PageImpl<>(list, pageable, searchHits.getTotalHits());
     }
-
 }

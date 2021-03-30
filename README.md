@@ -29,8 +29,9 @@ https://community.turl.tech
 - [x] 权限控制
 - [x] 置顶、加精、删除
 - [x] 网站统计
-- [ ] 任务执行和调度
-- [ ] 热帖
+- [x] 定时执行任务计算热门帖子
+- [x] 生成长图
+- [ ] 文件上传至七牛云
 
 ## 功能简介
 
@@ -42,17 +43,28 @@ https://community.turl.tech
 
 ## 技术栈
 
-| 技术            | 链接                                                         |
-| --------------- | ------------------------------------------------------------ |
-| Spring Boot     | https://spring.io/projects/spring-boot                       |
-| Spring          | https://spring.io/projects/spring-framework                  |
-| Spring MVC      | https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#spring-web |
-| MyBatis         | http://www.mybatis.org/mybatis-3                             |
-| Redis           | https://redis.io/                                            |
-| Kafka           | http://kafka.apache.org/                                     |
-| Elasticsearch   | https://www.elastic.co/cn/elasticsearch/                     |
-| Spring Security | https://spring.io/projects/spring-security                   |
-| Spring Actuator | https://docs.spring.io/spring-boot/docs/2.4.3/reference/html/production-ready-features.html#production-ready |
+| 技术            | 链接                                                         | 版本           |
+| --------------- | ------------------------------------------------------------ | -------------- |
+| Spring Boot     | https://spring.io/projects/spring-boot                       | 2.4.3          |
+| Spring          | https://spring.io/projects/spring-framework                  | 5.3.4          |
+| Spring MVC      | https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#spring-web | 5.3.4          |
+| MyBatis         | http://www.mybatis.org/mybatis-3                             | 3.5.1          |
+| Redis           | https://redis.io/                                            | 5.0.3          |
+| Kafka           | http://kafka.apache.org/                                     | 2.7.0          |
+| Elasticsearch   | https://www.elastic.co/cn/elasticsearch/                     | 7.9.3          |
+| Spring Security | https://spring.io/projects/spring-security                   | 5.4.5          |
+| Spring Quartz   | https://www.baeldung.com/spring-quartz-schedule              | 2.3.2          |
+| wkhtmltopdf     | https://wkhtmltopdf.org                                      | 0.12.6         |
+| kaptcha         | https://github.com/penggle/kaptcha                           | 2.3.2          |
+| Thymeleaf       | https://www.thymeleaf.org/                                   | 3.0.12.RELEASE |
+| MySQL           | https://www.mysql.com/                                       | 5.7.17         |
+| JDK             | https://www.oracle.com/java/technologies/javase-downloads.html | 1.8            |
+
+## 系统架构
+
+
+
+
 
 ## 数据库初始化
 
@@ -93,6 +105,10 @@ souuce /path/to/sql/tables_mysql_innodb.sql;
    ```
    http://localhost:8080
    ```
+
+## 运行效果展示
+
+
 
 ## 更新日志
 

@@ -6,7 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import tech.turl.community.entity.DiscussPost;
 import tech.turl.community.entity.Page;
-import tech.turl.community.service.ElasticSearchService;
+import tech.turl.community.service.ElasticsearchService;
 import tech.turl.community.service.LikeService;
 import tech.turl.community.service.UserService;
 import tech.turl.community.util.CommunityConstant;
@@ -23,14 +23,11 @@ import java.util.Map;
 @Controller
 public class SearchController implements CommunityConstant {
 
-    @Autowired
-    private ElasticSearchService elasticSearchService;
+    @Autowired private ElasticsearchService elasticsearchService;
 
-    @Autowired
-    private UserService userService;
+    @Autowired private UserService userService;
 
-    @Autowired
-    private LikeService likeService;
+    @Autowired private LikeService likeService;
 
     /**
      * 搜索帖子
@@ -44,7 +41,8 @@ public class SearchController implements CommunityConstant {
     public String search(String keyword, Page page, Model model) {
         // 搜索帖子
         org.springframework.data.domain.Page<DiscussPost> searchResult =
-                elasticSearchService.searchDiscussPost(keyword, page.getCurrent() - 1, page.getLimit());
+                elasticsearchService.searchDiscussPost(
+                        keyword, page.getCurrent() - 1, page.getLimit());
         // 聚合数据
         List<Map<String, Object>> discussPosts = new ArrayList<>();
         if (searchResult != null) {
@@ -55,7 +53,9 @@ public class SearchController implements CommunityConstant {
                 // 作者
                 map.put("user", userService.findUserById(post.getUserId()));
                 // 点赞数量
-                map.put("likeCount", likeService.findEntityLikeCount(ENTITY_TYPE_POST, post.getId()));
+                map.put(
+                        "likeCount",
+                        likeService.findEntityLikeCount(ENTITY_TYPE_POST, post.getId()));
                 discussPosts.add(map);
             }
         }

@@ -18,18 +18,22 @@ public interface DiscussPostMapper {
      * @param userId
      * @param offset
      * @param limit
+     * @param orderMode 如果传入1按照热度来排
      * @return
      */
-    List<DiscussPost> selectDiscussPosts(@Param("userId") int userId, @Param("offset") int offset, @Param("limit") int limit);
+    List<DiscussPost> selectDiscussPosts(
+            @Param("userId") int userId,
+            @Param("offset") int offset,
+            @Param("limit") int limit,
+            @Param("orderMode") int orderMode);
 
     /**
-     * <p>@Param注解用于给定参数取别名</p>
-     * 如果只有一个参数，并且在if里面使用，则必须加别名
+     * 查询用户的帖子 @Param注解用于给定参数取别名 如果只有一个参数，并且在if里面使用，则必须加别名
      *
      * @param userId
      * @return
      */
-    int selectDiscussPostRows (@Param("userId") int userId);
+    int selectDiscussPostRows(@Param("userId") int userId);
 
     /**
      * 插入一条帖子
@@ -57,9 +61,7 @@ public interface DiscussPostMapper {
     int updateCommentCount(@Param("id") int id, @Param("commentCount") int commentCount);
 
     /**
-     * 更新帖子类型
-     * 0：普通
-     * 1：置顶
+     * 更新帖子类型 0：普通 1：置顶
      *
      * @param id
      * @param type
@@ -68,14 +70,19 @@ public interface DiscussPostMapper {
     int updateType(@Param("id") int id, @Param("type") int type);
 
     /**
-     * 更新帖子状态
-     * 0：正常
-     * 1：精华
-     * 2：拉黑
+     * 更新帖子状态 0：正常 1：精华 2：拉黑
      *
      * @param id
      * @param status
      * @return
      */
     int updateStatus(@Param("id") int id, @Param("status") int status);
+
+    /**
+     * 更新帖子分数
+     *
+     * @param id
+     * @param score
+     */
+    void updateScore(@Param("id") int id, @Param("score") double score);
 }

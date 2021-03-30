@@ -15,24 +15,20 @@ import java.util.List;
  */
 @Service
 public class DiscussPostService {
-    @Autowired
-    private DiscussPostMapper discussPostMapper;
+    @Autowired private DiscussPostMapper discussPostMapper;
 
-    @Autowired
-    private SensitiveFilter sensitiveFilter;
+    @Autowired private SensitiveFilter sensitiveFilter;
 
-    public List<DiscussPost> findDiscussPosts(int userId, int offset, int limit){
-        return discussPostMapper.selectDiscussPosts(userId, offset, limit);
+    public List<DiscussPost> findDiscussPosts(int userId, int offset, int limit, int orderMode) {
+        return discussPostMapper.selectDiscussPosts(userId, offset, limit, orderMode);
     }
 
-    public int findDiscussPostRows(int userId){
+    public int findDiscussPostRows(int userId) {
         return discussPostMapper.selectDiscussPostRows(userId);
     }
 
     /**
-     * 添加帖子
-     * 转义html标记
-     * 过滤敏感词
+     * 添加帖子 转义html标记 过滤敏感词
      *
      * @param post
      * @return
@@ -52,9 +48,7 @@ public class DiscussPostService {
         return discussPostMapper.insertDiscussPost(post);
     }
 
-    /**
-     * 通过id查询一个帖子
-     */
+    /** 通过id查询一个帖子 */
     public DiscussPost findDiscussPostById(int id) {
         return discussPostMapper.selectDiscussPostById(id);
     }
@@ -90,5 +84,15 @@ public class DiscussPostService {
      */
     public int updateStatus(int id, int status) {
         return discussPostMapper.updateStatus(id, status);
+    }
+
+    /**
+     * 更新帖子分数
+     *
+     * @param id
+     * @param score
+     */
+    public void updateScore(int id, double score) {
+        discussPostMapper.updateScore(id, score);
     }
 }

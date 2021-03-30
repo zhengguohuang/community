@@ -19,7 +19,12 @@
         <if test="userId!=0">
             AND user_id = #{userId}
         </if>
-        ORDER BY type DESC, create_time DESC
+        <if test="orderMode==0">
+            ORDER BY type DESC, create_time DESC
+        </if>
+        <if test="orderMode==1">
+            ORDER BY type DESC, score DESC, create_time DESC
+        </if>
         limit #{offset}, #{limit}
     </select>
     <select id="selectDiscussPostRows" resultType="int">
@@ -51,5 +56,9 @@
     </update>
     <update id="updateStatus">
         UPDATE discuss_post SET status = #{status} WHERE id = #{id}
+    </update>
+
+    <update id="updateScore">
+        UPDATE discuss_post SET score = #{score} WHERE id = #{id}
     </update>
 </mapper>

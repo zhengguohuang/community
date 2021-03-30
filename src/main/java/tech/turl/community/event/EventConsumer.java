@@ -5,16 +5,18 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import tech.turl.community.entity.DiscussPost;
 import tech.turl.community.entity.Event;
 import tech.turl.community.entity.Message;
 import tech.turl.community.service.DiscussPostService;
-import tech.turl.community.service.ElasticSearchService;
+import tech.turl.community.service.ElasticsearchService;
 import tech.turl.community.service.MessageService;
 import tech.turl.community.util.CommunityConstant;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,14 +29,17 @@ import java.util.Map;
 public class EventConsumer implements CommunityConstant {
     private static final Logger logger = LoggerFactory.getLogger(EventConsumer.class);
 
-    @Autowired
-    private MessageService messageService;
+    @Autowired private MessageService messageService;
 
-    @Autowired
-    private DiscussPostService discussPostService;
+    @Autowired private DiscussPostService discussPostService;
 
-    @Autowired
-    private ElasticSearchService elasticSearchService;
+    @Autowired private ElasticsearchService elasticsearchService;
+
+    @Value("${wk.image.command}")
+    private String wkImageCommand;
+
+    @Value("${wk.image.storage}")
+    private String wkImageStorage;
 
     @KafkaListener(topics = {TOPIC_COMMENT, TOPIC_LIKE, TOPIC_FOLLOW})
     public void handleCommentMessage(ConsumerRecord record) {
@@ -88,7 +93,7 @@ public class EventConsumer implements CommunityConstant {
         }
         // 搜索引擎保存帖子信息
         DiscussPost post = discussPostService.findDiscussPostById(event.getEntityId());
-        elasticSearchService.saveDiscussPost(post);
+        elasticsearchService.saveDiscussPost(post);
     }
 
     /**
@@ -108,6 +113,43 @@ public class EventConsumer implements CommunityConstant {
             logger.error("消息格式错误！");
             return;
         }
-        elasticSearchService.deleteDiscussPost(event.getEntityId());
+        elasticsearchService.deleteDiscussPost(event.getEntityId());
+    }
+
+    /**
+     * 消费分享事件
+     *
+     * @param record
+     */
+    @KafkaListener(topics = {TOPIC_SHARE})
+    public void handleShareMessage(ConsumerRecord record) {
+        if (record == null || record.value() == null) {
+            logger.error("消息内容为空!");
+            return;
+        }
+
+        Event event = JSONObject.parseObject(record.value().toString(), Event.class);
+        if (event == null) {
+            logger.error("消息格式错误！");
+            return;
+        }
+        String htmlUrl = (String) event.getData().get("htmlUrl");
+        String fileName = (String) event.getData().get("fileName");
+        String suffix = (String) event.getData().get("suffix");
+        String cmd =
+                wkImageCommand
+                        + " --quality 75 "
+                        + htmlUrl
+                        + " "
+                        + wkImageStorage
+                        + "/"
+                        + fileName
+                        + suffix;
+        try {
+            Runtime.getRuntime().exec(cmd);
+            logger.info("生成长图成功: " + cmd);
+        } catch (IOException e) {
+            logger.error("生成长图失败: " + e.getMessage());
+        }
     }
 }

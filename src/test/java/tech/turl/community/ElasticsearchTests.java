@@ -35,16 +35,11 @@ import java.util.Map;
 @SpringBootTest
 @ContextConfiguration(classes = CommunityApplication.class)
 public class ElasticsearchTests {
-    @Autowired
-    private DiscussPostMapper discussPostMapper;
+    @Autowired private DiscussPostMapper discussPostMapper;
 
-    @Autowired
-    private DiscussPostRepository discussPostRepository;
+    @Autowired private DiscussPostRepository discussPostRepository;
 
-
-    @Autowired
-    private ElasticsearchRestTemplate elasticsearchRestTemplate;
-
+    @Autowired private ElasticsearchRestTemplate elasticsearchRestTemplate;
 
     @Test
     public void testInsert() {
@@ -61,14 +56,12 @@ public class ElasticsearchTests {
         discussPostRepository.save(post);
     }
 
-    /**
-     * 一次性插入多个
-     */
+    /** 一次性插入多个 */
     @Test
     public void testInsertList() {
-        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(101, 0, 100));
-        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(102, 0, 100));
-        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(103, 0, 100));
+        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(101, 0, 100, 0));
+        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(102, 0, 100, 0));
+        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(103, 0, 100, 0));
     }
 
     @Test
@@ -80,20 +73,26 @@ public class ElasticsearchTests {
     @Test
     public void testSearchByRepository() {
         Pageable pageable = PageRequest.of(0, 10);
-        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
-                .withQuery(QueryBuilders.multiMatchQuery("互联网寒冬", "title", "content"))
-                .withSort(SortBuilders.fieldSort("type").order(SortOrder.DESC))
-                .withSort(SortBuilders.fieldSort("score").order(SortOrder.DESC))
-                .withSort(SortBuilders.fieldSort("createTime").order(SortOrder.DESC))
-                .withPageable(pageable)
-                .withHighlightFields(
-                        new HighlightBuilder.Field("title").preTags("<em>").postTags("</em>"),
-                        new HighlightBuilder.Field("content").preTags("<em>").postTags("</em>")
-                ).build();
+        NativeSearchQuery searchQuery =
+                new NativeSearchQueryBuilder()
+                        .withQuery(QueryBuilders.multiMatchQuery("互联网寒冬", "title", "content"))
+                        .withSort(SortBuilders.fieldSort("type").order(SortOrder.DESC))
+                        .withSort(SortBuilders.fieldSort("score").order(SortOrder.DESC))
+                        .withSort(SortBuilders.fieldSort("createTime").order(SortOrder.DESC))
+                        .withPageable(pageable)
+                        .withHighlightFields(
+                                new HighlightBuilder.Field("title")
+                                        .preTags("<em>")
+                                        .postTags("</em>"),
+                                new HighlightBuilder.Field("content")
+                                        .preTags("<em>")
+                                        .postTags("</em>"))
+                        .build();
         // 底层获取了高亮显示的值，但是没有返回
         // Page<DiscussPost> page = discussPostRepository.search(searchQuery);
 
-        SearchHits<DiscussPost> searchHits = elasticsearchRestTemplate.search(searchQuery, DiscussPost.class);
+        SearchHits<DiscussPost> searchHits =
+                elasticsearchRestTemplate.search(searchQuery, DiscussPost.class);
         if (searchHits.getTotalHits() <= 0) {
             return;
         }
@@ -103,26 +102,27 @@ public class ElasticsearchTests {
             DiscussPost post = new DiscussPost();
             BeanUtils.copyProperties(content, post);
             // 处理高亮
-//            Map<String, List<String>> highlightFields = hit.getHighlightFields();
-//            for (Map.Entry<String, List<String>> stringHighlightFieldEntry : highlightFields.entrySet()) {
-//                String key = stringHighlightFieldEntry.getKey();
-//                if(StringUtils.equals(key, "title")){
-//                    List<String> fragments = stringHighlightFieldEntry.getValue();
-//                    StringBuilder sb = new StringBuilder();
-//                    for (String fragment : fragments) {
-//                        sb.append(fragment);
-//                    }
-//                    post.setTitle(sb.toString());
-//                }
-//                if(StringUtils.equals(key, "content")){
-//                    List<String> fragments = stringHighlightFieldEntry.getValue();
-//                    StringBuilder sb = new StringBuilder();
-//                    for (String fragment : fragments) {
-//                        sb.append(fragment);
-//                    }
-//                    post.setContent(sb.toString());
-//                }
-//            }
+            //            Map<String, List<String>> highlightFields = hit.getHighlightFields();
+            //            for (Map.Entry<String, List<String>> stringHighlightFieldEntry :
+            // highlightFields.entrySet()) {
+            //                String key = stringHighlightFieldEntry.getKey();
+            //                if(StringUtils.equals(key, "title")){
+            //                    List<String> fragments = stringHighlightFieldEntry.getValue();
+            //                    StringBuilder sb = new StringBuilder();
+            //                    for (String fragment : fragments) {
+            //                        sb.append(fragment);
+            //                    }
+            //                    post.setTitle(sb.toString());
+            //                }
+            //                if(StringUtils.equals(key, "content")){
+            //                    List<String> fragments = stringHighlightFieldEntry.getValue();
+            //                    StringBuilder sb = new StringBuilder();
+            //                    for (String fragment : fragments) {
+            //                        sb.append(fragment);
+            //                    }
+            //                    post.setContent(sb.toString());
+            //                }
+            //            }
             // 处理高亮
             List<String> list1 = hit.getHighlightFields().get("title");
             if (list1 != null) {
@@ -133,10 +133,9 @@ public class ElasticsearchTests {
                 post.setContent(list2.get(0));
             }
             list.add(post);
-
-
         }
-//        List<DiscussPost> searchDiscussPost = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
+        //        List<DiscussPost> searchDiscussPost =
+        // searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
         Page<DiscussPost> page = new PageImpl<>(list, pageable, searchHits.getTotalHits());
 
         System.out.println(page.getTotalElements());
@@ -148,7 +147,6 @@ public class ElasticsearchTests {
         }
     }
 
-
     @Test
     public void test() {
         search("互联网", 1);
@@ -159,11 +157,16 @@ public class ElasticsearchTests {
     public void search(String keyWord, Integer page) {
         List<DiscussPost> list = new ArrayList();
         Pageable pageable = PageRequest.of(page - 1, ROWS); // 设置分页参数
-        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
-                .withQuery(QueryBuilders.matchQuery("title", keyWord).operator(Operator.AND)) // match查询
-                .withPageable(pageable).withHighlightBuilder(getHighlightBuilder("title")) // 设置高亮
-                .build();
-        SearchHits<DiscussPost> searchHits = this.elasticsearchRestTemplate.search(searchQuery, DiscussPost.class);
+        NativeSearchQuery searchQuery =
+                new NativeSearchQueryBuilder()
+                        .withQuery(
+                                QueryBuilders.matchQuery("title", keyWord)
+                                        .operator(Operator.AND)) // match查询
+                        .withPageable(pageable)
+                        .withHighlightBuilder(getHighlightBuilder("title")) // 设置高亮
+                        .build();
+        SearchHits<DiscussPost> searchHits =
+                this.elasticsearchRestTemplate.search(searchQuery, DiscussPost.class);
         for (SearchHit<DiscussPost> searchHit : searchHits) { // 获取搜索到的数据
 
             DiscussPost content = searchHit.getContent();
@@ -172,7 +175,8 @@ public class ElasticsearchTests {
 
             // 处理高亮
             Map<String, List<String>> highlightFields = searchHit.getHighlightFields();
-            for (Map.Entry<String, List<String>> stringHighlightFieldEntry : highlightFields.entrySet()) {
+            for (Map.Entry<String, List<String>> stringHighlightFieldEntry :
+                    highlightFields.entrySet()) {
                 String key = stringHighlightFieldEntry.getKey();
                 if (StringUtils.equals(key, "title")) {
                     List<String> fragments = stringHighlightFieldEntry.getValue();
@@ -182,7 +186,6 @@ public class ElasticsearchTests {
                     }
                     discussPost.setTitle(sb.toString());
                 }
-
             }
             list.add(discussPost);
         }
@@ -201,7 +204,7 @@ public class ElasticsearchTests {
         // 高亮条件
         HighlightBuilder highlightBuilder = new HighlightBuilder(); // 生成高亮查询器
         for (String field : fields) {
-            highlightBuilder.field(field);// 高亮查询字段
+            highlightBuilder.field(field); // 高亮查询字段
         }
         highlightBuilder.requireFieldMatch(false); // 如果要多个字段高亮,这项要为false
         highlightBuilder.preTags("<span style=\"color:red\">"); // 高亮设置
@@ -212,6 +215,4 @@ public class ElasticsearchTests {
 
         return highlightBuilder;
     }
-
-
 }
