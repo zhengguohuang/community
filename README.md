@@ -1,12 +1,14 @@
 # 仿牛客网社区项目
 
+![IDE](https://img.shields.io/badge/IDE-IntelliJ%20IDEA-brightgreen.svg) ![Java](https://img.shields.io/badge/Java-1.8-blue.svg) ![Database](https://img.shields.io/badge/Database-MySQL-lightgrey.svg)
+
 ## 项目简介
 
 一个仿照牛客网实现的讨论区，不仅实现了基本的注册、登录、发帖、评论、回复、私信等功能，同时使用前缀树实现敏感词过滤；使用 Redis 实现点赞与关注；使用 Kafka 处理发送评论、点赞和关注等系统通知；使用 Elasticsearch 实现全局搜索，关键词高亮显示；使用 wkhtmltopdf 生成长图和 PDF；实现网站 UV 和 DAU 统计；并将用户头像等信息存于七牛云服务器。
 
 ## 在线演示地址
 
-https://community.turl.tech
+~~https://community.turl.tech~~
 
 ## 测试账号
 
@@ -22,16 +24,22 @@ https://community.turl.tech
 - [x] 注册
 - [x] 验证码
 - [x] 登录
+- [ ] 登录出错限制
+- [ ] 第三方登录
 - [x] 修改头像
 - [x] 敏感词过滤
 - [x] 发布帖子
+- [ ] 我的帖子
 - [x] 帖子详情
+- [ ] 浏览量
 - [x] 评论
 - [x] 私信
 - [x] 统一异常处理
 - [x] 统一日志处理
 - [x] 点赞
 - [x] 关注
+- [ ] 收藏
+- [ ] 我的收藏
 - [x] 系统通知
 - [x] 搜索
 - [x] 权限控制
@@ -138,6 +146,12 @@ souuce /path/to/sql/tables_mysql_innodb.sql;
 #### 网站统计
 
 ![image-20210331105420047](https://gitee.com/zhengguohuang/img/raw/master/img/image-20210331105420047.png)
+
+## 文档
+
+https://easydoc.top/doc/70562937/SJuuLoYS/cI3Atvte
+
+欢迎加群交流: 792364202
 
 ## 更新日志
 
