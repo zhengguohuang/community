@@ -8,6 +8,14 @@
 
 https://community.turl.tech
 
+## 测试账号
+
+| 用户类型 | 用户名 | 密码   |
+| -------- | ------ | ------ |
+| 普通用户 | user   | 123456 |
+| 版主     | banzhu | 123456 |
+| 管理员   | admin  | 123456 |
+
 ## 功能列表
 
 - [x] 邮件发送
@@ -31,14 +39,15 @@ https://community.turl.tech
 - [x] 网站统计
 - [x] 定时执行任务计算热门帖子
 - [x] 生成长图
-- [ ] 文件上传至七牛云
+- [x] 文件上传至七牛云
+- [x] 监控
 
 ## 功能简介
 
 - 使用 Redis 的 set 实现点赞，zset 实现关注，并使用 Redis 存储登录ticket和验证码，解决分布式 Session 问题，使用 Redis 的高级数据类型 HyperLogLog 统计 UV(Unique Visitor)，使用 Bitmap 统计 DAU(Daily Active User)。
 - 使用 Kafka 处理发送评论、点赞、关注等系统通知、将新发布的帖子异步传输至Elasticsearch服务器，并使用事件进行封装，构建了强大的异步消息系统。
 - 使用Elasticsearch做全局搜索，增加关键词高亮显示等功能。
-- 热帖排行模块，使用分布式缓存 Redis 和本地缓存 Caffeine 作为多级缓存，避免了缓存雪崩，将 QPS 提升了20倍，大大提升了网站访问速度。并使用 Quartz 定时更新热帖排行。
+- 热帖排行模块，使用本地缓存 Caffeine作为一级缓存和分布式缓存 Redis作为二级缓存构建多级缓存，避免了缓存雪崩，同时使用使用压测工具测试优化前后性能，将 QPS 提升了4倍(7.6/sec -> 33.5/sec)，大大提升了网站访问速度。并使用 Quartz 定时更新热帖排行。
 - 使用 Spring Security 做权限控制，替代拦截器的拦截控制，并使用自己的认证方案替代 Security 认证流程，使权限认证和控制更加方便灵活。
 
 ## 技术栈
@@ -62,9 +71,9 @@ https://community.turl.tech
 
 ## 系统架构
 
+![image-20210331103427522](https://gitee.com/zhengguohuang/img/raw/master/img/image-20210331103427522.png)
 
-
-
+![网站架构图](https://gitee.com/zhengguohuang/img/raw/master/img/%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E5%9B%BE.png)
 
 ## 数据库初始化
 
@@ -75,8 +84,6 @@ souuce /path/to/sql/init_schema.sql;
 souuce /path/to/sql/init_data.sql;
 souuce /path/to/sql/tables_mysql_innodb.sql;
 ```
-
-
 
 ## 运行
 
@@ -108,7 +115,29 @@ souuce /path/to/sql/tables_mysql_innodb.sql;
 
 ## 运行效果展示
 
+#### 发帖
 
+![image-20210331105217867](https://gitee.com/zhengguohuang/img/raw/master/img/image-20210331105217867.png)
+
+#### 帖子详情、评论
+
+![image-20210331105241026](https://gitee.com/zhengguohuang/img/raw/master/img/image-20210331105241026.png)
+
+#### 私信
+
+![image-20210331105316546](https://gitee.com/zhengguohuang/img/raw/master/img/image-20210331105316546.png)
+
+#### 系统通知
+
+![image-20210331105333140](https://gitee.com/zhengguohuang/img/raw/master/img/image-20210331105333140.png)
+
+#### 搜索
+
+![image-20210331105404130](https://gitee.com/zhengguohuang/img/raw/master/img/image-20210331105404130.png)
+
+#### 网站统计
+
+![image-20210331105420047](https://gitee.com/zhengguohuang/img/raw/master/img/image-20210331105420047.png)
 
 ## 更新日志
 
