@@ -1,6 +1,7 @@
 package tech.turl.community.aspect;
 
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
@@ -18,7 +19,7 @@ import java.util.Date;
  * @date 2021/03/20
  */
 @Component
-// @Aspect
+@Aspect
 public class ServiceLogAspect {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ServiceLogAspect.class);

@@ -19,14 +19,11 @@ import java.util.List;
  */
 @Service
 public class CommentService implements CommunityConstant {
-    @Autowired
-    private CommentMapper commentMapper;
+    @Autowired private CommentMapper commentMapper;
 
-    @Autowired
-    private SensitiveFilter sensitiveFilter;
+    @Autowired private SensitiveFilter sensitiveFilter;
 
-    @Autowired
-    private DiscussPostService discussPostService;
+    @Autowired private DiscussPostService discussPostService;
 
     public List<Comment> findCommentsByEntity(int entityType, int entityId, int offset, int limit) {
         return commentMapper.selectCommentsByEntity(entityType, entityId, offset, limit);
@@ -42,7 +39,10 @@ public class CommentService implements CommunityConstant {
      * @param comment
      * @return
      */
-    @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    @Transactional(
+            isolation = Isolation.READ_COMMITTED,
+            propagation = Propagation.REQUIRED,
+            rollbackFor = Exception.class)
     public int addComment(Comment comment) {
         if (comment == null) {
             throw new IllegalArgumentException("参数不能为空!");
@@ -54,7 +54,9 @@ public class CommentService implements CommunityConstant {
 
         // 更新帖子数量
         if (comment.getEntityType() == ENTITY_TYPE_POST) {
-            int count = commentMapper.selectCountByEntity(comment.getEntityType(), comment.getEntityId()) + 1;
+            int count =
+                    commentMapper.selectCountByEntity(
+                            comment.getEntityType(), comment.getEntityId());
             discussPostService.updateCommentCount(comment.getEntityId(), count);
         }
 
