@@ -19,37 +19,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author zhengguohuang
- */
+/** @author zhengguohuang */
 @Controller
 @RequestMapping("/alpha")
 public class AlphaController {
-    @Autowired
-    AlphaService alphaService;
+    @Autowired AlphaService alphaService;
 
-    @Autowired
-    private UserMapper userMapper;
+    @Autowired private UserMapper userMapper;
 
-    @Autowired
-    private DiscussPostService discussPostService;
+    @Autowired private DiscussPostService discussPostService;
 
     @RequestMapping("/hello")
     @ResponseBody
-    public String sayHello(){
+    public String sayHello() {
         return "Hello Spring Boot.";
     }
 
     @RequestMapping("/data")
     @ResponseBody
-    public String getData(){
+    public String getData() {
         return alphaService.find();
     }
 
     /**
-     * 带参数GET请求
-     * /students?current=1&limit=20
-     * 只能处理GET请求
+     * 带参数GET请求 /students?current=1&limit=20 只能处理GET请求
      *
      * @param current
      * @param limit
@@ -59,35 +52,35 @@ public class AlphaController {
     @ResponseBody
     public String getStudents(
             @RequestParam(name = "current", required = false, defaultValue = "1") int current,
-            @RequestParam(name = "limit", required = false, defaultValue = "20") int limit){
+            @RequestParam(name = "limit", required = false, defaultValue = "20") int limit) {
         System.out.println(current);
         System.out.println(limit);
         return "some students";
     }
 
     /**
-     * 路径中带参数
-     * /student/123
+     * 路径中带参数 /student/123
      *
      * @param id
      * @return
      */
     @RequestMapping(path = "/student/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public String getStudent(@PathVariable("id") int id){
+    public String getStudent(@PathVariable("id") int id) {
         System.out.println(id);
         return "success";
     }
 
     /**
      * 响应表单请求
+     *
      * @param name
      * @param age
      * @return
      */
     @RequestMapping(path = "/student", method = RequestMethod.POST)
     @ResponseBody
-    public String saveStudent(String name, int age){
+    public String saveStudent(String name, int age) {
         System.out.println(name);
         System.out.println(age);
         return "success";
@@ -95,27 +88,28 @@ public class AlphaController {
 
     /**
      * 响应HTML数据
+     *
      * @return
      */
-    @RequestMapping(path="/teacher", method = RequestMethod.GET)
-    public ModelAndView getTeacher(){
+    @RequestMapping(path = "/teacher", method = RequestMethod.GET)
+    public ModelAndView getTeacher() {
         ModelAndView mav = new ModelAndView();
-        mav.addObject("name","张三");
-        mav.addObject("age",30);
+        mav.addObject("name", "张三");
+        mav.addObject("age", 30);
         mav.setViewName("demo/view");
         return mav;
     }
 
     @RequestMapping(path = "/school", method = RequestMethod.GET)
-    public String getSchool(Model model){
+    public String getSchool(Model model) {
         model.addAttribute("name", "Beijing");
         model.addAttribute("age", 23);
-        return "/demo/view";
+        return "demo/view";
     }
 
     /**
-     * 响应JSON数据(异步请求)
-     * Java对象 -> JSON字符串 -> JS对象
+     * 响应JSON数据(异步请求) Java对象 -> JSON字符串 -> JS对象
+     *
      * @return
      */
     @RequestMapping(path = "/emp", method = RequestMethod.GET)
@@ -130,7 +124,7 @@ public class AlphaController {
 
     @RequestMapping(path = "/emps", method = RequestMethod.GET)
     @ResponseBody
-    public List<Map<String, Object>> getEmps(){
+    public List<Map<String, Object>> getEmps() {
         List<Map<String, Object>> list = new ArrayList<>();
         Map<String, Object> emp = new HashMap<>(16);
         emp.put("name", "张三");
@@ -152,30 +146,29 @@ public class AlphaController {
 
     @GetMapping("/cookie/set")
     @ResponseBody
-    public String setCookie(HttpServletResponse response){
+    public String setCookie(HttpServletResponse response) {
         // 创建cookie
         Cookie cookie = new Cookie("code", CommunityUtil.generateUUID());
         // 设置cookie生效范围
         cookie.setPath("/alpha");
         // 设置cookie的生存时间
-        cookie.setMaxAge(60*10);
+        cookie.setMaxAge(60 * 10);
         // 发送cookie
         response.addCookie(cookie);
         return "set cookie";
-
     }
 
     @GetMapping("/cookie/get")
     @ResponseBody
-    public String getCookie(@CookieValue("code") String code){
+    public String getCookie(@CookieValue("code") String code) {
         System.out.println(code);
         return "get cookie";
     }
 
     @GetMapping("/session/set")
     @ResponseBody
-    public String setSession(HttpSession session){
-        session.setAttribute("id",1);
+    public String setSession(HttpSession session) {
+        session.setAttribute("id", 1);
         session.setAttribute("name", "hzg");
 
         return "set session";
@@ -183,12 +176,11 @@ public class AlphaController {
 
     @GetMapping("/session/get")
     @ResponseBody
-    public String getSession(HttpSession session){
+    public String getSession(HttpSession session) {
         System.out.println(session.getAttribute("id"));
         System.out.println(session.getAttribute("name"));
         return "get cookie";
     }
-
 
     @GetMapping("/demo")
     @ResponseBody
@@ -208,6 +200,4 @@ public class AlphaController {
         System.out.println(age);
         return CommunityUtil.getJSONString(0, "操作成功！");
     }
-
-
 }

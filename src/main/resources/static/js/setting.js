@@ -1,5 +1,6 @@
 $(function () {
     $("#uploadForm").submit(upload);
+    $("#forgetForm").submit(forget);
 });
 
 function upload() {
@@ -37,4 +38,19 @@ function upload() {
     })
     ;
     return false;
+}
+
+function forget() {
+    $.post(
+        CONTEXT_PATH + "/user/forgetPassword",
+        {"oldPassword": $("input[name='oldPassword']").val(), "newPassword": $("input[name='newPassword']").val()},
+        function (data) {
+            data = $.parseJSON(data);
+            if (data.code == 0) {
+                // window.location.href = "/logout";
+            } else {
+                alert(data.msg);
+            }
+        }
+    );
 }

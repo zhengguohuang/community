@@ -25,8 +25,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 public class UserService implements CommunityConstant {
-    @Autowired
-    private UserMapper userMapper;
+    @Autowired private UserMapper userMapper;
 
     @Value("${community.path.domain}")
     private String domain;
@@ -34,21 +33,17 @@ public class UserService implements CommunityConstant {
     @Value("${server.servlet.context-path}")
     private String contextPath;
 
-    @Autowired
-    private TemplateEngine templateEngine;
+    @Autowired private TemplateEngine templateEngine;
 
-    @Autowired
-    private MailClient mailClient;
+    @Autowired private MailClient mailClient;
 
-//    @Autowired
-//    private LoginTicketMapper loginTicketMapper;
+    //    @Autowired
+    //    private LoginTicketMapper loginTicketMapper;
 
-    @Autowired
-    private RedisTemplate redisTemplate;
-
+    @Autowired private RedisTemplate redisTemplate;
 
     public User findUserById(int id) {
-//        return userMapper.selectById(id);
+        //        return userMapper.selectById(id);
         User user = getCache(id);
         if (user == null) {
             user = initCache(id);
@@ -56,9 +51,7 @@ public class UserService implements CommunityConstant {
         return user;
     }
 
-    /**
-     * 注册
-     */
+    /** 注册 */
     public Map<String, Object> register(User user) {
         Map<String, Object> map = new HashMap<>(16);
         // 空值处理
@@ -97,7 +90,9 @@ public class UserService implements CommunityConstant {
         user.setType(0);
         user.setStatus(0);
         user.setActivationCode(CommunityUtil.generateUUID());
-        user.setHeaderUrl(String.format("http://images.nowcoder.com/head/%dt.png", new Random().nextInt(1000)));
+        user.setHeaderUrl(
+                String.format(
+                        "http://images.nowcoder.com/head/%dt.png", new Random().nextInt(1000)));
         user.setCreateTime(new Date());
         userMapper.insertUser(user);
 
@@ -105,11 +100,16 @@ public class UserService implements CommunityConstant {
         Context context = new Context();
         context.setVariable("email", user.getEmail());
         // http://localhost:8080/community/activation/101/code
-        String url = domain + contextPath + "activation/" + user.getId() + "/" + user.getActivationCode();
+        String url =
+                domain
+                        + contextPath
+                        + "activation/"
+                        + user.getId()
+                        + "/"
+                        + user.getActivationCode();
         context.setVariable("url", url);
         String content = templateEngine.process("/mail/activation", context);
         mailClient.sendMail(user.getEmail(), "激活邮件", content);
-
 
         return map;
     }
@@ -130,8 +130,8 @@ public class UserService implements CommunityConstant {
     /**
      * 登录
      *
-     * @param username       用户名
-     * @param password       密码
+     * @param username 用户名
+     * @param password 密码
      * @param expiredSeconds 凭证过期时间 秒
      * @return
      */
@@ -173,19 +173,18 @@ public class UserService implements CommunityConstant {
         loginTicket.setTicket(CommunityUtil.generateUUID());
         loginTicket.setStatus(0);
         loginTicket.setExpired(new Date(System.currentTimeMillis() + expiredSeconds * 1000));
-//        loginTicketMapper.insertLoginTicket(loginTicket);
+        //        loginTicketMapper.insertLoginTicket(loginTicket);
 
         String redisKey = RedisKeyUtil.getTicketKey(loginTicket.getTicket());
         // loginTicket会序列化成json
         redisTemplate.opsForValue().set(redisKey, loginTicket);
-
 
         map.put("ticket", loginTicket.getTicket());
         return map;
     }
 
     public void logout(String ticket) {
-//        loginTicketMapper.updateStatus(ticket, 1);
+        //        loginTicketMapper.updateStatus(ticket, 1);
         String redisKey = RedisKeyUtil.getTicketKey(ticket);
         LoginTicket loginTicket = (LoginTicket) redisTemplate.opsForValue().get(redisKey);
         loginTicket.setStatus(1);
@@ -199,7 +198,7 @@ public class UserService implements CommunityConstant {
      * @return
      */
     public LoginTicket findLoginTicket(String ticket) {
-//        return loginTicketMapper.selectByTicket(ticket);
+        //        return loginTicketMapper.selectByTicket(ticket);
         String redisKey = RedisKeyUtil.getTicketKey(ticket);
         return (LoginTicket) redisTemplate.opsForValue().get(redisKey);
     }
@@ -212,7 +211,7 @@ public class UserService implements CommunityConstant {
      * @return
      */
     public int updateHeader(int userId, String headerUrl) {
-//        return userMapper.updateHeader(userId, headerUrl);
+        //        return userMapper.updateHeader(userId, headerUrl);
         int rows = userMapper.updateHeader(userId, headerUrl);
         clearCache(userId);
         return rows;
@@ -227,7 +226,6 @@ public class UserService implements CommunityConstant {
     public User findUserByName(String username) {
         return userMapper.selectByName(username);
     }
-
 
     /**
      * 1.优先从缓存中取值
@@ -268,17 +266,29 @@ public class UserService implements CommunityConstant {
         User user = this.findUserById(userId);
 
         List<GrantedAuthority> list = new ArrayList<>();
-        list.add(() -> {
-            switch (user.getType()) {
-                case 1:
-                    return AUTHORITY_ADMIN;
-                case 2:
-                    return AUTHORITY_MODERATOR;
-                default:
-                    return AUTHORITY_USER;
-            }
-        });
+        list.add(
+                () -> {
+                    switch (user.getType()) {
+                        case 1:
+                            return AUTHORITY_ADMIN;
+                        case 2:
+                            return AUTHORITY_MODERATOR;
+                        default:
+                            return AUTHORITY_USER;
+                    }
+                });
         return list;
     }
 
+    /**
+     * 更新密码
+     *
+     * @param id
+     * @param newPassword
+     * @return
+     */
+    public int updatePassword(int id, String newPassword) {
+        clearCache(id);
+        return userMapper.updatePassword(id, newPassword);
+    }
 }

@@ -27,17 +27,13 @@ import java.util.Map;
 @Controller
 public class FollowController implements CommunityConstant {
 
-    @Autowired
-    private HostHolder hostHolder;
+    @Autowired private HostHolder hostHolder;
 
-    @Autowired
-    private FollowService followService;
+    @Autowired private FollowService followService;
 
-    @Autowired
-    private UserService userService;
+    @Autowired private UserService userService;
 
-    @Autowired
-    private EventProducer eventProducer;
+    @Autowired private EventProducer eventProducer;
 
     /**
      * 关注
@@ -53,17 +49,17 @@ public class FollowController implements CommunityConstant {
         followService.follow(user.getId(), entityType, entityId);
 
         // 触发关注事件
-        Event event = new Event()
-                .setTopic(TOPIC_FOLLOW)
-                .setUserId(hostHolder.getUser().getId())
-                .setEntityType(entityType)
-                .setEntityId(entityId)
-                .setEntityUserId(entityId);
+        Event event =
+                new Event()
+                        .setTopic(TOPIC_FOLLOW)
+                        .setUserId(hostHolder.getUser().getId())
+                        .setEntityType(entityType)
+                        .setEntityId(entityId)
+                        .setEntityUserId(entityId);
         eventProducer.fireEvent(event);
 
         return CommunityUtil.getJSONString(0, "已关注！");
     }
-
 
     /**
      * 取消关注
@@ -79,7 +75,6 @@ public class FollowController implements CommunityConstant {
         followService.unfollow(user.getId(), entityType, entityId);
         return CommunityUtil.getJSONString(0, "已取消关注！");
     }
-
 
     /**
      * 当前用户是否关注id为userId的用户
@@ -113,7 +108,8 @@ public class FollowController implements CommunityConstant {
         page.setPath("/followees/" + userId);
         page.setRows((int) followService.findFolloweeCount(userId, ENTITY_TYPE_USER));
 
-        List<Map<String, Object>> userList = followService.findFollowees(userId, page.getOffset(), page.getLimit());
+        List<Map<String, Object>> userList =
+                followService.findFollowees(userId, page.getOffset(), page.getLimit());
         if (userList != null) {
             for (Map<String, Object> map : userList) {
                 User u = (User) map.get("user");
@@ -121,7 +117,7 @@ public class FollowController implements CommunityConstant {
             }
         }
         model.addAttribute("users", userList);
-        return "/site/followee";
+        return "site/followee";
     }
 
     /**
@@ -143,7 +139,8 @@ public class FollowController implements CommunityConstant {
         page.setPath("/followers/" + userId);
         page.setRows((int) followService.findFollowerCount(ENTITY_TYPE_USER, userId));
 
-        List<Map<String, Object>> userList = followService.findFollowers(userId, page.getOffset(), page.getLimit());
+        List<Map<String, Object>> userList =
+                followService.findFollowers(userId, page.getOffset(), page.getLimit());
         if (userList != null) {
             for (Map<String, Object> map : userList) {
                 User u = (User) map.get("user");
@@ -151,7 +148,6 @@ public class FollowController implements CommunityConstant {
             }
         }
         model.addAttribute("users", userList);
-        return "/site/follower";
+        return "site/follower";
     }
-
 }

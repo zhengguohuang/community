@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -84,7 +85,7 @@ public class UserController implements CommunityConstant {
         model.addAttribute("uploadToken", uploadToken);
         model.addAttribute("fileName", fileName);
 
-        return "/site/setting";
+        return "site/setting";
     }
 
     /**
@@ -99,14 +100,14 @@ public class UserController implements CommunityConstant {
     public String uploadHeader(MultipartFile headerImage, Model model) {
         if (headerImage == null) {
             model.addAttribute("error", "您还没有选择图片！");
-            return "/site/setting";
+            return "site/setting";
         }
         String fileName = headerImage.getOriginalFilename();
         String suffix = fileName.substring(fileName.lastIndexOf("."));
 
         if (StringUtils.isBlank(suffix)) {
             model.addAttribute("error", "文件格式不正确！");
-            return "/site/setting";
+            return "site/setting";
         }
 
         // 生成随机文件名
@@ -184,7 +185,7 @@ public class UserController implements CommunityConstant {
                             hostHolder.getUser().getId(), ENTITY_TYPE_USER, userId);
         }
         model.addAttribute("hasFollowed", hasFollowed);
-        return "/site/profile";
+        return "site/profile";
     }
 
     /**
@@ -201,6 +202,52 @@ public class UserController implements CommunityConstant {
         }
         String url = headerBucketUrl + "/" + fileName;
         userService.updateHeader(hostHolder.getUser().getId(), url);
+        return CommunityUtil.getJSONString(0);
+    }
+
+    /**
+     * 修改密码
+     *
+     * @param
+     * @return
+     */
+    @PostMapping("/forgetPassword")
+    @ResponseBody
+    public String updatePassword(String oldPassword, String newPassword) {
+        // 验证原始密码是否正确
+        if (StringUtils.isBlank(oldPassword)) {
+            return CommunityUtil.getJSONString(1, "原密码不能为空");
+        }
+        User user = hostHolder.getUser();
+        System.out.println(user);
+        user = userService.findUserById(user.getId());
+        System.out.println(user);
+        oldPassword = CommunityUtil.md5(oldPassword + user.getSalt());
+        System.out.println(oldPassword);
+        System.out.println(user.getPassword());
+        if (!user.getPassword().equals(oldPassword)) {
+            return CommunityUtil.getJSONString(1, "原密码错误！");
+        }
+
+        // 验证密码是否为空
+        if (StringUtils.isBlank(newPassword)) {
+            return CommunityUtil.getJSONString(1, "新密码不能为空");
+        }
+        // 验证两次密码是否相同
+        // 是否与原密码相同
+        newPassword = CommunityUtil.md5(newPassword + user.getSalt());
+        if (user.getPassword().equals(newPassword)) {
+            return CommunityUtil.getJSONString(1, "新密码与原密码不能相同！");
+        }
+
+        // 更新密码
+        int ret = userService.updatePassword(user.getId(), newPassword);
+        if (ret == 0) {
+            return CommunityUtil.getJSONString(1, "更新失败！");
+        }
+        SecurityContextHolder.clearContext();
+        // 更新成功返回JSON，状态码为0
+
         return CommunityUtil.getJSONString(0);
     }
 }

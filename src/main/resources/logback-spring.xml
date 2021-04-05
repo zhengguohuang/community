@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <contextName>community</contextName>
+    <!--<property name="LOG_PATH" value="./community-log"/>-->
     <property name="LOG_PATH" value="D:/work/data"/>
     <property name="APPDIR" value="community"/>
 

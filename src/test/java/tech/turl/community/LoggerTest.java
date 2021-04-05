@@ -10,8 +10,9 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(classes = CommunityApplication.class)
 public class LoggerTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(LoggerTest.class);
+
     @Test
-    public void testLogger(){
+    public void testLogger() {
         LOGGER.debug("debug log");
         LOGGER.info("info log");
         LOGGER.warn("warn log");

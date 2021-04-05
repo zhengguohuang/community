@@ -57,11 +57,11 @@ public class HomeController implements CommunityConstant {
         }
         model.addAttribute("discussPosts", discussPosts);
         model.addAttribute("orderMode", orderMode);
-        return "/index";
+        return "index";
     }
 
     @GetMapping("/error")
     public String getErrorPage() {
-        return "/error/500";
+        return "error/500";
     }
 }

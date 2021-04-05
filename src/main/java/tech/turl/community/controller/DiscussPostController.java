@@ -5,6 +5,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.HtmlUtils;
 import tech.turl.community.entity.*;
 import tech.turl.community.event.EventProducer;
 import tech.turl.community.service.CommentService;
@@ -29,11 +30,8 @@ public class DiscussPostController implements CommunityConstant {
     @Autowired private HostHolder hostHolder;
     @Autowired private UserService userService;
     @Autowired private CommentService commentService;
-
     @Autowired private LikeService likeService;
-
     @Autowired private EventProducer eventProducer;
-
     @Autowired private RedisTemplate redisTemplate;
 
     /**
@@ -178,7 +176,7 @@ public class DiscussPostController implements CommunityConstant {
             }
         }
         model.addAttribute("comments", commentVoList);
-        return "/site/discuss-detail";
+        return "site/discuss-detail";
     }
 
     /**
@@ -249,5 +247,33 @@ public class DiscussPostController implements CommunityConstant {
         eventProducer.fireEvent(event);
 
         return CommunityUtil.getJSONString(0);
+    }
+
+    /** @author zhengguohuang */
+    @GetMapping("/my")
+    public String getMyDiscussPost(Model model, Page page) {
+        int userId = hostHolder.getUser().getId();
+        page.setRows(discussPostService.findDiscussPostRows(userId));
+        page.setPath("/discuss/my");
+        List<DiscussPost> list =
+                discussPostService.findDiscussPosts(userId, page.getOffset(), page.getLimit(), 0);
+        List<Map<String, Object>> discussPosts = new ArrayList<>();
+        if (list != null) {
+            for (DiscussPost post : list) {
+                Map<String, Object> map = new HashMap<>(16);
+                String title = HtmlUtils.htmlUnescape(post.getTitle());
+                String content = HtmlUtils.htmlUnescape(post.getContent());
+
+                post.setTitle(title);
+                post.setContent(content);
+                map.put("post", post);
+                long likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_POST, post.getId());
+                map.put("likeCount", likeCount);
+                discussPosts.add(map);
+            }
+        }
+        model.addAttribute("postCount", discussPostService.findDiscussPostRows(userId));
+        model.addAttribute("discussPosts", discussPosts);
+        return "site/my-post";
     }
 }

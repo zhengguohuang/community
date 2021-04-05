@@ -63,6 +63,6 @@ public class SearchController implements CommunityConstant {
         model.addAttribute("keyword", keyword);
         page.setPath("/search?keyword=" + keyword);
         page.setRows(searchResult == null ? 0 : (int) searchResult.getTotalElements());
-        return "/site/search";
+        return "site/search";
     }
 }

@@ -8,7 +8,7 @@
 
 ## 在线演示地址
 
-~~https://community.turl.tech~~
+~~http://community.turl.tech~~
 
 ## 测试账号
 
@@ -27,9 +27,10 @@
 - [ ] 登录出错限制
 - [ ] 第三方登录
 - [x] 修改头像
+- [x] 修改密码
 - [x] 敏感词过滤
 - [x] 发布帖子
-- [ ] 我的帖子
+- [x] 我的帖子
 - [x] 帖子详情
 - [ ] 浏览量
 - [x] 评论
@@ -88,9 +89,9 @@
 ```sql
 create database community;
 use community;
-souuce /path/to/sql/init_schema.sql;
-souuce /path/to/sql/init_data.sql;
-souuce /path/to/sql/tables_mysql_innodb.sql;
+source /path/to/sql/init_schema.sql;
+source /path/to/sql/init_data.sql;
+source /path/to/sql/tables_mysql_innodb.sql;
 ```
 
 ## 运行
