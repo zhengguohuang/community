@@ -2,13 +2,15 @@
 
 ![IDE](https://img.shields.io/badge/IDE-IntelliJ%20IDEA-brightgreen.svg) ![Java](https://img.shields.io/badge/Java-1.8-blue.svg) ![Database](https://img.shields.io/badge/Database-MySQL-lightgrey.svg)
 
+欢迎加入QQ交流群: 792364202，目前已经上传了项目开发用到的相关资料、工具等文件。
+
 ## 项目简介
 
 一个仿照牛客网实现的讨论区，不仅实现了基本的注册、登录、发帖、评论、回复、私信等功能，同时使用前缀树实现敏感词过滤；使用 Redis 实现点赞与关注；使用 Kafka 处理发送评论、点赞和关注等系统通知；使用 Elasticsearch 实现全文搜索，关键词高亮显示；使用 wkhtmltopdf 生成长图和 PDF；实现网站 UV 和 DAU 统计；并将用户头像等信息存于七牛云服务器。
 
 ## 在线演示地址
 
-~~http://community.turl.tech~~
+http://community.turl.tech
 
 ## 测试账号
 
@@ -20,27 +22,24 @@
 
 ## 功能列表
 
+### 已经实现了的功能
+
 - [x] 邮件发送
 - [x] 注册
 - [x] 验证码
 - [x] 登录
-- [ ] 登录出错限制
-- [ ] 第三方登录
 - [x] 修改头像
 - [x] 修改密码
 - [x] 敏感词过滤
 - [x] 发布帖子
 - [x] 我的帖子
 - [x] 帖子详情
-- [ ] 浏览量
 - [x] 评论
 - [x] 私信
 - [x] 统一异常处理
 - [x] 统一日志处理
 - [x] 点赞
 - [x] 关注
-- [ ] 收藏
-- [ ] 我的收藏
 - [x] 系统通知
 - [x] 搜索
 - [x] 权限控制
@@ -51,12 +50,20 @@
 - [x] 文件上传至七牛云
 - [x] 监控
 
+### TO DO List
+
+- [ ] 积分模块
+- [ ] 收藏模块
+- [ ] 浏览量
+- [ ] 限流
+
 ## 功能简介
 
-- 使用 Redis 的 set 实现点赞，zset 实现关注，并使用 Redis 存储登录ticket和验证码，解决分布式 Session 问题，使用 Redis 的高级数据类型 HyperLogLog 统计 UV(Unique Visitor)，使用 Bitmap 统计 DAU(Daily Active User)。
+- 使用 Redis 的 set 实现点赞，zset 实现关注，并使用 Redis 存储登录ticket和验证码，解决分布式 Session 问题，使用 Redis 的高级数据类型 HyperLogLog 统计 UV (Unique Visitor)，使用 Bitmap 统计 DAU (Daily Active User)。
 - 使用 Kafka 处理发送评论、点赞、关注等系统通知、将新发布的帖子异步传输至Elasticsearch服务器，并使用事件进行封装，构建了强大的异步消息系统。
 - 使用Elasticsearch做全局搜索，增加关键词高亮显示等功能。
-- 热帖排行模块，使用本地缓存 Caffeine作为一级缓存和分布式缓存 Redis作为二级缓存构建多级缓存，避免了缓存雪崩，同时使用使用压测工具测试优化前后性能，将 QPS 提升了4倍(7.6/sec -> 33.5/sec)，大大提升了网站访问速度。并使用 Quartz 定时更新热帖排行。
+- 热帖排行模块，使用本地缓存 Caffeine作为一级缓存和分布式缓存 Redis作为二级缓存构建多级缓存，避免了缓存雪崩，同时使用使用压测工具测试优化前后性能，将 QPS 提升了4.4倍 (7.6/sec -> 33.5/sec)，大大提升了网站访问速度。
+- 使用 Quartz 定时更新热帖排行。
 - 使用 Spring Security 做权限控制，替代拦截器的拦截控制，并使用自己的认证方案替代 Security 认证流程，使权限认证和控制更加方便灵活。
 
 ## 技术栈
@@ -104,19 +111,27 @@ source /path/to/sql/tables_mysql_innodb.sql;
    git clone https://github.com/zhengguohuang/community.git
    ```
 
-3. 运行打包命令
+3. 配置mysql、七牛云、kafka、ElasticSearch
+
+4. 启动zookeeper
+
+5. 启动Kafka
+
+6. 启动Elasticsearch
+
+7. 运行打包命令
 
    ```bash
    mvn package
    ```
 
-4. 运行项目
+8. 运行项目
 
    ```bash
    java -jar xxx.jar
    ```
 
-5. 访问项目
+9. 访问项目
 
    ```
    http://localhost:8080
@@ -151,8 +166,6 @@ source /path/to/sql/tables_mysql_innodb.sql;
 ## 文档
 
 https://easydoc.top/doc/70562937/SJuuLoYS/cI3Atvte
-
-欢迎加群交流: 792364202
 
 ## 更新日志
 

@@ -33,7 +33,6 @@ public class RedisTest {
         String redisKey = "test:user";
         redisTemplate.opsForHash().put(redisKey, "id", 1);
         redisTemplate.opsForHash().put(redisKey, "username", "zhangsan");
-
         System.out.println(redisTemplate.opsForHash().get(redisKey, "id"));
         System.out.println(redisTemplate.opsForHash().get(redisKey, "username"));
     }
