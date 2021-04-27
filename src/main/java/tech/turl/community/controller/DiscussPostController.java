@@ -12,10 +12,7 @@ import tech.turl.community.service.CommentService;
 import tech.turl.community.service.DiscussPostService;
 import tech.turl.community.service.LikeService;
 import tech.turl.community.service.UserService;
-import tech.turl.community.util.CommunityConstant;
-import tech.turl.community.util.CommunityUtil;
-import tech.turl.community.util.HostHolder;
-import tech.turl.community.util.RedisKeyUtil;
+import tech.turl.community.util.*;
 
 import java.util.*;
 
@@ -33,6 +30,7 @@ public class DiscussPostController implements CommunityConstant {
     @Autowired private LikeService likeService;
     @Autowired private EventProducer eventProducer;
     @Autowired private RedisTemplate redisTemplate;
+    @Autowired private RedisCellRateLimiter redisCellRateLimiter;
 
     /**
      * 添加帖子
@@ -47,6 +45,17 @@ public class DiscussPostController implements CommunityConstant {
         User user = hostHolder.getUser();
         if (user == null) {
             return CommunityUtil.getJSONString(403, "您还没有登录哦！");
+        }
+        // 限制发帖频率，一个小时内只能发3次帖
+        String key = RedisKeyUtil.getRateLimitKey(user.getId());
+        //        RedisCellRateLimiter limiter = new RedisCellRateLimiter(redisTemplate, key, 3600,
+        // 3);
+        //        if (!limiter.tryAcquire(1)) {
+        //            return CommunityUtil.getJSONString(403, "发帖频率太快了！");
+        //        }
+        boolean pass = redisCellRateLimiter.tryAcquire(key, 3, 3, 3600);
+        if (!pass) {
+            return CommunityUtil.getJSONString(403, "发帖频率太快了！");
         }
         DiscussPost post = new DiscussPost();
         post.setUserId(user.getId());

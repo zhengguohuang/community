@@ -19,84 +19,84 @@ import java.util.List;
  */
 @Service
 public class DataService {
-  @Autowired private RedisTemplate redisTemplate;
-  private SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+    @Autowired private RedisTemplate redisTemplate;
+    private SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
 
-  /**
-   * 统计UV，将指定ip计入UV
-   *
-   * @param ip
-   */
-  public void recordUV(String ip) {
-    String redisKey = RedisKeyUtil.getUVKey(df.format(new Date()));
-    redisTemplate.opsForHyperLogLog().add(redisKey, ip);
-  }
-
-  /**
-   * 统计指定日期范围内的UV
-   *
-   * @param startDate
-   * @param endDate
-   * @return
-   */
-  public long calculateUV(Date startDate, Date endDate) {
-    if (startDate == null || endDate == null) {
-      throw new IllegalArgumentException("参数不能为空");
+    /**
+     * 统计UV，将指定ip计入UV
+     *
+     * @param ip
+     */
+    public void recordUV(String ip) {
+        String redisKey = RedisKeyUtil.getUvKey(df.format(new Date()));
+        redisTemplate.opsForHyperLogLog().add(redisKey, ip);
     }
-    // 整理该日期范围内的Key
-    List<String> keyList = new ArrayList<>();
-    Calendar calendar = Calendar.getInstance();
-    calendar.setTime(startDate);
-    while (!calendar.getTime().after(endDate)) {
-      String key = RedisKeyUtil.getUVKey(df.format(calendar.getTime()));
-      keyList.add(key);
-      calendar.add(Calendar.DATE, 1);
-    }
-    // 合并这些数据
-    String redisKey = RedisKeyUtil.getUVKey(df.format(startDate), df.format(endDate));
-    redisTemplate.opsForHyperLogLog().union(redisKey, keyList.toArray());
-    // 统计数据
-    return redisTemplate.opsForHyperLogLog().size(redisKey);
-  }
 
-  /**
-   * 统计DAU，将指定用户计入DAU
-   *
-   * @param
-   */
-  public void recordDAU(int userId) {
-    String redisKey = RedisKeyUtil.getDAUKey(df.format(new Date()));
-    redisTemplate.opsForValue().setBit(redisKey, userId, true);
-  }
-
-  /**
-   * 统计指定日期范围内的DAU
-   *
-   * @param startDate
-   * @param endDate
-   * @return
-   */
-  public long calculateDAU(Date startDate, Date endDate) {
-    // 整理该日期范围内的Key
-    List<byte[]> keyList = new ArrayList<>();
-    Calendar calendar = Calendar.getInstance();
-    calendar.setTime(startDate);
-    while (!calendar.getTime().after(endDate)) {
-      String key = RedisKeyUtil.getDAUKey(df.format(calendar.getTime()));
-      keyList.add(key.getBytes());
-      calendar.add(Calendar.DATE, 1);
+    /**
+     * 统计指定日期范围内的UV
+     *
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public long calculateUV(Date startDate, Date endDate) {
+        if (startDate == null || endDate == null) {
+            throw new IllegalArgumentException("参数不能为空");
+        }
+        // 整理该日期范围内的Key
+        List<String> keyList = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startDate);
+        while (!calendar.getTime().after(endDate)) {
+            String key = RedisKeyUtil.getUvKey(df.format(calendar.getTime()));
+            keyList.add(key);
+            calendar.add(Calendar.DATE, 1);
+        }
+        // 合并这些数据
+        String redisKey = RedisKeyUtil.getUvKey(df.format(startDate), df.format(endDate));
+        redisTemplate.opsForHyperLogLog().union(redisKey, keyList.toArray());
+        // 统计数据
+        return redisTemplate.opsForHyperLogLog().size(redisKey);
     }
-    // 合并这些数据
-    String redisKey = RedisKeyUtil.getDAUKey(df.format(startDate), df.format(endDate));
-    return (long)
-        redisTemplate.execute(
-            (RedisCallback)
-                redisConnection -> {
-                  redisConnection.bitOp(
-                      RedisStringCommands.BitOperation.OR,
-                      redisKey.getBytes(),
-                      keyList.toArray(new byte[0][0]));
-                  return redisConnection.bitCount(redisKey.getBytes());
-                });
-  }
+
+    /**
+     * 统计DAU，将指定用户计入DAU
+     *
+     * @param
+     */
+    public void recordDAU(int userId) {
+        String redisKey = RedisKeyUtil.getDauKey(df.format(new Date()));
+        redisTemplate.opsForValue().setBit(redisKey, userId, true);
+    }
+
+    /**
+     * 统计指定日期范围内的DAU
+     *
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public long calculateDAU(Date startDate, Date endDate) {
+        // 整理该日期范围内的Key
+        List<byte[]> keyList = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startDate);
+        while (!calendar.getTime().after(endDate)) {
+            String key = RedisKeyUtil.getDauKey(df.format(calendar.getTime()));
+            keyList.add(key.getBytes());
+            calendar.add(Calendar.DATE, 1);
+        }
+        // 合并这些数据
+        String redisKey = RedisKeyUtil.getDauKey(df.format(startDate), df.format(endDate));
+        return (long)
+                redisTemplate.execute(
+                        (RedisCallback)
+                                redisConnection -> {
+                                    redisConnection.bitOp(
+                                            RedisStringCommands.BitOperation.OR,
+                                            redisKey.getBytes(),
+                                            keyList.toArray(new byte[0][0]));
+                                    return redisConnection.bitCount(redisKey.getBytes());
+                                });
+    }
 }

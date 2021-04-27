@@ -49,17 +49,18 @@ http://community.turl.tech
 - [x] 生成长图
 - [x] 文件上传至七牛云
 - [x] 监控
+- [x] 限流
 
 ### TO DO List
 
 - [ ] 积分模块
 - [ ] 收藏模块
 - [ ] 浏览量
-- [ ] 限流
 
 ## 功能简介
 
 - 使用 Redis 的 set 实现点赞，zset 实现关注，并使用 Redis 存储登录ticket和验证码，解决分布式 Session 问题，使用 Redis 的高级数据类型 HyperLogLog 统计 UV (Unique Visitor)，使用 Bitmap 统计 DAU (Daily Active User)。
+- 使用Redis Cell模块对用户发帖进行限流，防止恶意灌水。
 - 使用 Kafka 处理发送评论、点赞、关注等系统通知、将新发布的帖子异步传输至Elasticsearch服务器，并使用事件进行封装，构建了强大的异步消息系统。
 - 使用Elasticsearch做全局搜索，增加关键词高亮显示等功能。
 - 热帖排行模块，使用本地缓存 Caffeine作为一级缓存和分布式缓存 Redis作为二级缓存构建多级缓存，避免了缓存雪崩，同时使用使用压测工具测试优化前后性能，将 QPS 提升了4.4倍 (7.6/sec -> 33.5/sec)，大大提升了网站访问速度。
@@ -163,6 +164,10 @@ source /path/to/sql/tables_mysql_innodb.sql;
 
 ![image-20210331105420047](https://gitee.com/zhengguohuang/img/raw/master/img/image-20210331105420047.png)
 
+#### 限流
+
+![image-20210427152933772](https://gitee.com/zhengguohuang/img/raw/master/img/image-20210427152933772.png)
+
 ## 文档
 
 https://easydoc.top/doc/70562937/SJuuLoYS/cI3Atvte
@@ -170,4 +175,5 @@ https://easydoc.top/doc/70562937/SJuuLoYS/cI3Atvte
 ## 更新日志
 
 * 2021-3-8 创建项目
+* 2021-4-27增加发帖限流功能
 

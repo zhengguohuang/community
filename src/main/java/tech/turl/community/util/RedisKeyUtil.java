@@ -16,6 +16,7 @@ public class RedisKeyUtil {
     private static final String PREFIX_UV = "uv";
     private static final String PREFIX_DAU = "dau";
     private static final String PREFIX_POST = "post";
+    private static final String PREFIX_RATE_LIMIT_PUBLISH = "rate:limit:publish";
 
     /**
      * 某个实体的赞 like:entity:entityType:entityId->set(userId)
@@ -96,7 +97,7 @@ public class RedisKeyUtil {
      * @param date
      * @return
      */
-    public static String getUVKey(String date) {
+    public static String getUvKey(String date) {
         return PREFIX_UV + SPLIT + date;
     }
 
@@ -107,7 +108,7 @@ public class RedisKeyUtil {
      * @param endDate
      * @return
      */
-    public static String getUVKey(String startDate, String endDate) {
+    public static String getUvKey(String startDate, String endDate) {
         return PREFIX_UV + SPLIT + startDate + SPLIT + endDate;
     }
 
@@ -117,7 +118,7 @@ public class RedisKeyUtil {
      * @param date
      * @return
      */
-    public static String getDAUKey(String date) {
+    public static String getDauKey(String date) {
         return PREFIX_DAU + SPLIT + date;
     }
 
@@ -128,7 +129,7 @@ public class RedisKeyUtil {
      * @param endDate
      * @return
      */
-    public static String getDAUKey(String startDate, String endDate) {
+    public static String getDauKey(String startDate, String endDate) {
         return PREFIX_DAU + SPLIT + startDate + SPLIT + endDate;
     }
 
@@ -139,5 +140,15 @@ public class RedisKeyUtil {
      */
     public static String getPostScoreKey() {
         return PREFIX_POST + SPLIT + "score";
+    }
+
+    /**
+     * 发帖限流
+     *
+     * @param userId
+     * @return
+     */
+    public static String getRateLimitKey(int userId) {
+        return PREFIX_RATE_LIMIT_PUBLISH + SPLIT + userId;
     }
 }

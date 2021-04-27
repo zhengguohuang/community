@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import tech.turl.community.entity.Comment;
 import tech.turl.community.entity.DiscussPost;
 import tech.turl.community.entity.Event;
+import tech.turl.community.entity.User;
 import tech.turl.community.event.EventProducer;
 import tech.turl.community.service.CommentService;
 import tech.turl.community.service.DiscussPostService;
@@ -44,7 +45,8 @@ public class CommentController implements CommunityConstant {
      */
     @PostMapping("/add/{discussPostId}")
     public String addComment(@PathVariable("discussPostId") int discussPostId, Comment comment) {
-        comment.setUserId(hostHolder.getUser().getId());
+        User user = hostHolder.getUser();
+        comment.setUserId(user.getId());
         comment.setStatus(0);
         comment.setCreateTime(new Date());
         commentService.addComment(comment);
